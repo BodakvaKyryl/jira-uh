@@ -1,0 +1,23 @@
+{
+  "jsxBracketSameLine": false,
+  "printWidth": 120,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "bracketSameLine": true,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "tailwindFunctions": ["cva", "classNames", "cn"],
+  "tailwindAttributes": ["classNames"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrderBuiltinModulesToTop": true,
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
+  "importOrderMergeDuplicateImports": true,
+  "importOrderCombineTypeAndValueImports": true,
+  "importOrderSeparateImportTypeGroups": true,
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
