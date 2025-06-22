@@ -1,0 +1,47 @@
+{
+  // Editor & Formatting
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.fixAll.eslint": "always",
+    "source.fixAll.markdownlint": "always",
+    "source.fixAll.sortJSON": "always",
+    "source.generate.finalModifiers": "always",
+    "source.organizeImports": "always",
+    "source.sortMembers": "always"
+  },
+  "editor.inlineSuggest.enabled": true,
+  "editor.linkedEditing": true,
+
+  // TypeScript & JavaScript
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  // Tailwind CSS
+  "tailwindCSS.classAttributes": ["class", "className"],
+  "tailwindCSS.validate": true,
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["clsx\\(([^)]*)\\)", "'([^']*)'"],
+    ["cn\\(([^)]*)\\)", "'([^']*)'"],
+    ["twMerge\\(([^)]*)\\)", "'([^']*)'"],
+    ["(?:'|\"|`)([^,)]*)(?:'|\"|`)", "([\\w\\-:!]+)"],
+    ["[cC]lassNames\\s*[:=]\\s*`([\\s\\S]*?)`"]
+  ],
+  "tailwindCSS.files.exclude": ["**/.git/**", "**/node_modules/**"],
+
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+
+  // File & Workspace
+  "files.autoSave": "onFocusChange"
+}
