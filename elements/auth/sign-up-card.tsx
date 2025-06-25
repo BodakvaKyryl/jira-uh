@@ -1,4 +1,5 @@
 "use client";
+
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,15 +9,46 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { AuthButtons } from "./auth-buttons";
+
+const signUpFormSchema = z.object({
+  name: z.string().trim().min(1, "Name is required!"),
+  email: z.string().email("Write your email!"),
+  password: z
+    .string()
+    .min(8, "Password is required!")
+    .max(60, "Password is too long!"),
+});
 
 export const SignUpCard = () => {
+  const form = useForm<z.infer<typeof signUpFormSchema>>({
+    resolver: zodResolver(signUpFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmitForm = (values: z.infer<typeof signUpFormSchema>) => {
+    console.log(values);
+  };
+
   return (
-    <Card className="h-full w-full border-none shadow-none md:w-[500px]">
-      <CardHeader className="flex flex-col items-center justify-center p-7 text-center">
+    <Card className="h-full w-full border-none shadow-none md:w-[480px]">
+      <CardHeader className="flex flex-col items-center justify-center text-center">
         <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
           By signing up, you agree to our{" "}
@@ -33,58 +65,66 @@ export const SignUpCard = () => {
       <div className="px-7">
         <DottedSeparator />
       </div>
-      <CardContent className="p-7">
-        <form className="space-y-4">
-          <Input
-            required
-            type="text"
-            placeholder="Enter your name"
-            onChange={() => {}}
-            value={"name"}
-            disabled={false}
-          />
-          <Input
-            required
-            type="email"
-            placeholder="Enter email address"
-            onChange={() => {}}
-            value={"email"}
-            disabled={false}
-          />
-          <Input
-            required
-            type="password"
-            placeholder="Enter your password"
-            onChange={() => {}}
-            value={"password"}
-            disabled={false}
-            min={8}
-            max={256}
-          />
-          <Button disabled={false} size="lg" className="w-full">
-            Login
-          </Button>
-        </form>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmitForm)}
+            className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="name"
+                      placeholder="Enter your name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="Enter your email address"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter your password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button disabled={false} size="lg" className="w-full">
+              Login
+            </Button>
+          </form>
+        </Form>
       </CardContent>
-      <div className="flex flex-col gap-y-4 px-7">
-        <DottedSeparator />
-        <Button
-          variant={"secondary"}
-          disabled={false}
-          size="lg"
-          className="w-full">
-          <FcGoogle className="mr-2 size-5" />
-          Login with Google
-        </Button>
-        <Button
-          variant={"secondary"}
-          disabled={false}
-          size="lg"
-          className="w-full">
-          <FaGithub className="mr-2 size-5" />
-          Login with GitHub
-        </Button>
-      </div>
+      <AuthButtons />
     </Card>
   );
 };
