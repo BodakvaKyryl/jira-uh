@@ -21,18 +21,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useSignUp } from "../api/use-sign-up";
+import { signUpFormSchema } from "../schemas";
 import { AuthButtons } from "./auth-buttons";
 
-const signUpFormSchema = z.object({
-  name: z.string().trim().min(1, "Name is required!"),
-  email: z.string().email("Write your email!"),
-  password: z
-    .string()
-    .min(8, "Password is required!")
-    .max(60, "Password is too long!"),
-});
-
 export const SignUpCard = () => {
+  const { mutate } = useSignUp();
+
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
@@ -43,7 +38,7 @@ export const SignUpCard = () => {
   });
 
   const onSubmitForm = (values: z.infer<typeof signUpFormSchema>) => {
-    console.log(values);
+    mutate({ json: values });
   };
 
   return (
