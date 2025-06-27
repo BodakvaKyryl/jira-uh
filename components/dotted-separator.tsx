@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useMemo } from "react";
 
 interface DottedSeparatorProps {
   className?: string;
@@ -18,37 +19,42 @@ export const DottedSeparator = ({
   direction = "horizontal",
 }: DottedSeparatorProps) => {
   const isHorizontal = direction === "horizontal";
-  const dotSizeNum = parseInt(dotSize);
-  const gapSizeNum = parseInt(gapSize);
-  const totalSize = dotSizeNum + gapSizeNum;
 
-  const separatorColor = color.startsWith("var(")
-    ? color
-    : color.startsWith("--")
-      ? `var(${color})`
-      : color;
+  const styles = useMemo(() => {
+    const dotSizeNum = parseInt(dotSize);
+    const gapSizeNum = parseInt(gapSize);
+    const totalSize = dotSizeNum + gapSizeNum;
+
+    const separatorColor = color.startsWith("var(")
+      ? color
+      : color.startsWith("--")
+        ? `var(${color})`
+        : color;
+
+    return {
+      width: isHorizontal ? "100%" : height,
+      height: isHorizontal ? height : "100%",
+      backgroundImage: `radial-gradient(circle, ${separatorColor} 1px, transparent 1px)`,
+      backgroundSize: isHorizontal
+        ? `${totalSize}px ${height}`
+        : `${height} ${totalSize}px`,
+      backgroundRepeat: isHorizontal ? "repeat-x" : "repeat-y",
+      backgroundPosition: "center",
+    };
+  }, [color, height, gapSize, dotSize, isHorizontal]);
+
+  const containerClasses = cn(
+    isHorizontal
+      ? "flex w-full items-center"
+      : "flex h-full flex-col items-center",
+    className
+  );
+
+  const separatorClasses = isHorizontal ? "flex-grow" : "flex-grow-0";
 
   return (
-    <div
-      className={cn(
-        isHorizontal
-          ? "flex w-full items-center"
-          : "flex h-full flex-col items-center",
-        className
-      )}>
-      <div
-        className={isHorizontal ? "flex-grow" : "flex-grow-0"}
-        style={{
-          width: isHorizontal ? "100%" : height,
-          height: isHorizontal ? height : "100%",
-          backgroundImage: `radial-gradient(circle, ${separatorColor} 1px, transparent 1px)`,
-          backgroundSize: isHorizontal
-            ? `${totalSize}px ${height}`
-            : `${height} ${totalSize}px`,
-          backgroundRepeat: isHorizontal ? "repeat-x" : "repeat-y",
-          backgroundPosition: "center",
-        }}
-      />
+    <div className={containerClasses}>
+      <div className={separatorClasses} style={styles} />
     </div>
   );
 };
