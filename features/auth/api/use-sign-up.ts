@@ -1,17 +1,15 @@
-import { client } from "@/lib/rpc";
+import { rpc } from "@/lib/rpc";
 import { useMutation } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-
-type ResponseType = InferResponseType<
-  (typeof client.api.auth.register)["$post"]
->;
-
-type RequestType = InferRequestType<(typeof client.api.auth.register)["$post"]>;
+import { RequestTypeRegister, ResponseTypeRegister } from "./types";
 
 export const useSignUp = () => {
-  const mutation = useMutation<ResponseType, Error, RequestType>({
+  const mutation = useMutation<
+    ResponseTypeRegister,
+    Error,
+    RequestTypeRegister
+  >({
     mutationFn: async ({ json }) => {
-      const response = await client.api.auth.register["$post"]({ json });
+      const response = await rpc.auth.register({ json });
 
       return await response.json();
     },
