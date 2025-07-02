@@ -20,7 +20,7 @@ import { signInFormSchema } from "../schemas";
 import { AuthButtons } from "./auth-buttons";
 
 export const SignInCard = () => {
-  const { mutate } = useSignIn();
+  const { mutate, isPending } = useSignIn();
 
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
@@ -81,13 +81,17 @@ export const SignInCard = () => {
               )}
             />
 
-            <Button type="submit" size="lg" className="w-full">
+            <Button
+              disabled={isPending}
+              type="submit"
+              size="lg"
+              className="w-full">
               Login
             </Button>
           </form>
         </Form>
       </CardContent>
-      <AuthButtons />
+      <AuthButtons disabled={isPending} />
     </Card>
   );
 };

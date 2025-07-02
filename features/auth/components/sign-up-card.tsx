@@ -26,7 +26,7 @@ import { signUpFormSchema } from "../schemas";
 import { AuthButtons } from "./auth-buttons";
 
 export const SignUpCard = () => {
-  const { mutate } = useSignUp();
+  const { mutate, isPending } = useSignUp();
 
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
@@ -113,13 +113,13 @@ export const SignUpCard = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={false} size="lg" className="w-full">
-              Login
+            <Button disabled={isPending} size="lg" className="w-full">
+              Register
             </Button>
           </form>
         </Form>
       </CardContent>
-      <AuthButtons />
+      <AuthButtons disabled={isPending} />
     </Card>
   );
 };
