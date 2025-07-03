@@ -1,4 +1,5 @@
 import auth from "@/features/auth/server/route";
+import workspaces from "@/features/workspaces/server/route";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
@@ -11,7 +12,7 @@ app.onError((err, c) => {
   return c.json({ error: "Internal Server Error" }, 500);
 });
 
-const routes = app.route("/auth", auth);
+const routes = app.route("/auth", auth).route("/workspaces", workspaces);
 
 export const GET = handle(app);
 export const POST = handle(app);
