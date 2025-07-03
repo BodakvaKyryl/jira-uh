@@ -1,6 +1,7 @@
 import { rpc } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { RequestTypeLogin, ResponseTypeLogin } from "./types";
 
 export const useSignIn = () => {
@@ -11,11 +12,19 @@ export const useSignIn = () => {
     mutationFn: async ({ json }) => {
       const response = await rpc.auth.login({ json });
 
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
+
       return await response.json();
     },
     onSuccess: () => {
+      toast.success("Signed in successfully!");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
+    },
+    onError: () => {
+      toast.error("Failed to sign in. Please check your credentials.");
     },
   });
 
