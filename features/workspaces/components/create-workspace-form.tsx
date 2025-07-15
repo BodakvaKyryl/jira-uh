@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImageIcon } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -29,8 +30,8 @@ interface CreateWorkspaceFormProps {
 export const CreateWorkspaceForm = ({
   onCancelForm,
 }: CreateWorkspaceFormProps) => {
+  const router = useRouter();
   const { mutate, isPending } = useCreateWorkspace();
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof createWorkspaceSchema>>({
@@ -46,8 +47,9 @@ export const CreateWorkspaceForm = ({
     mutate(
       { form: finalValues },
       {
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
           form.reset();
+          router.push(`/workspaces/${data.$id}`);
         },
       }
     );
@@ -62,13 +64,13 @@ export const CreateWorkspaceForm = ({
 
   return (
     <Card className="h-full w-full border-none shadow-none">
-      <CardHeader className="flex p-7">
+      <CardHeader className="flex">
         <CardTitle className="text-xl font-bold">
           Create a new workspace
         </CardTitle>
       </CardHeader>
       <DottedSeparator className="px-7" />
-      <CardContent className="p-7">
+      <CardContent className="px-7">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmitForm)}>
             <div className="flex flex-col gap-y-4">
