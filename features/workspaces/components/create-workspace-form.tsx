@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImageIcon } from "lucide-react";
 import Image from "next/image";
@@ -24,7 +25,7 @@ import { useCreateWorkspace } from "../api/use-create-workspace";
 import { createWorkspaceSchema } from "../schemas";
 
 interface CreateWorkspaceFormProps {
-  onCancelForm: () => void;
+  onCancelForm?: () => void;
 }
 
 export const CreateWorkspaceForm = ({
@@ -47,9 +48,11 @@ export const CreateWorkspaceForm = ({
     mutate(
       { form: finalValues },
       {
-        onSuccess: ({ data }) => {
+        onSuccess: (response) => {
           form.reset();
-          router.push(`/workspaces/${data.$id}`);
+          if ("data" in response) {
+            router.push(`/workspaces/${response.data.$id}`);
+          }
         },
       }
     );
@@ -151,7 +154,8 @@ export const CreateWorkspaceForm = ({
                 type="button"
                 size={"lg"}
                 variant={"secondary"}
-                onClick={onCancelForm}>
+                onClick={onCancelForm}
+                className={cn(!onCancelForm && "invisible")}>
                 Cancel
               </Button>
               <Button disabled={isPending} size={"lg"}>
