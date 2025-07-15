@@ -1,10 +1,8 @@
-import { getCurrentUser } from "@/features/auth/actions";
 import { SignUpCard } from "@/features/auth/components/sign-up-card";
-import { redirect } from "next/navigation";
+import { requireGuest } from "@/lib/auth-utils";
 
 const SignUpPage = async () => {
-  const user = await getCurrentUser();
-  if (user) redirect("/");
+  await requireGuest();
 
   return <SignUpCard />;
 };
