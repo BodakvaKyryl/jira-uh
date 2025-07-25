@@ -8,3 +8,12 @@ export type responseTypeCreateWorkspace = InferResponseType<
 export type requestTypeCreateWorkspace = InferRequestType<
   (typeof client.api.workspaces)["$post"]
 >;
+
+export type responseTypeUpdateWorkspace = InferResponseType<
+  (typeof client.api.workspaces)[":workspaceId"]["$patch"],
+  200
+>;
+
+export type requestTypeUpdateWorkspace = InferRequestType<
+  (typeof client.api.workspaces)[":workspaceId"]["$patch"]
+>;

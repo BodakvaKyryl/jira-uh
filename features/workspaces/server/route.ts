@@ -1,16 +1,13 @@
-import {
-  DATABASE_ID,
-  IMAGES_BUCKET_ID,
-  MEMBERS_ID,
-  WORKSPACES_ID,
-} from "@/config";
+import { DATABASE_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config";
 import { MemberRole } from "@/features/members/types";
+import { getMember } from "@/features/members/utils";
+import { uploadImageAndGetBase64 } from "@/lib/appwrite";
 import { MiddlewareContext, sessionMiddleware } from "@/lib/session-middleware";
 import { generateInviteCodeWorkspace } from "@/lib/utils";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
-import { ID, Query } from "node-appwrite";
-import { createWorkspaceSchema } from "../schemas";
+import { ID, Permission, Query, Role } from "node-appwrite";
+import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
 
 const app = new Hono<MiddlewareContext>()
   .get("/", sessionMiddleware, async (c) => {
@@ -19,6 +16,7 @@ const app = new Hono<MiddlewareContext>()
 
     const members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
       Query.equal("userId", user.$id),
+      Query.limit(5000),
     ]);
 
     if (members.total === 0) {
@@ -30,7 +28,11 @@ const app = new Hono<MiddlewareContext>()
     const workspaces = await databases.listDocuments(
       DATABASE_ID,
       WORKSPACES_ID,
-      [Query.orderDesc("$createdAt"), Query.contains("$id", workspaceIds)]
+      [
+        Query.orderDesc("$createdAt"),
+        Query.contains("$id", workspaceIds),
+        Query.limit(5000),
+      ]
     );
 
     return c.json({ data: workspaces });
@@ -45,32 +47,21 @@ const app = new Hono<MiddlewareContext>()
         const storage = c.get("storage");
         const user = c.get("user");
         const { name, image } = c.req.valid("form");
+
         let uploadedImageUrl: string | undefined;
 
         if (image instanceof File) {
           try {
-            if (image.size > 1024 * 1024) {
-              return c.json(
-                { error: "Image file size must be less than 1MB" },
-                400
-              );
-            }
-
-            const file = await storage.createFile(
-              IMAGES_BUCKET_ID,
-              ID.unique(),
-              image
+            uploadedImageUrl = await uploadImageAndGetBase64(storage, image);
+          } catch (uploadError: any) {
+            console.error(
+              "Error uploading image for new workspace:",
+              uploadError
             );
-
-            const arrayBuffer = await storage.getFilePreview(
-              IMAGES_BUCKET_ID,
-              file.$id
+            return c.json(
+              { error: uploadError.message || "Failed to upload image" },
+              400
             );
-
-            uploadedImageUrl = `data:image/png;base64,${Buffer.from(arrayBuffer).toString("base64")}`;
-          } catch (uploadError) {
-            console.error("Error uploading image:", uploadError);
-            return c.json({ error: "Failed to upload image" }, 500);
           }
         }
 
@@ -83,7 +74,13 @@ const app = new Hono<MiddlewareContext>()
             userId: user.$id,
             imageUrl: uploadedImageUrl,
             inviteCode: generateInviteCodeWorkspace(8),
-          }
+          },
+
+          [
+            Permission.read(Role.user(user.$id)),
+            Permission.update(Role.user(user.$id)),
+            Permission.delete(Role.user(user.$id)),
+          ]
         );
 
         await databases.createDocument(DATABASE_ID, MEMBERS_ID, ID.unique(), {
@@ -95,7 +92,81 @@ const app = new Hono<MiddlewareContext>()
         return c.json({ data: workspace });
       } catch (error) {
         console.error("Error creating workspace:", error);
-        return c.json({ error: "Failed to create workspace" }, 500);
+        return c.json(
+          { error: "Failed to create workspace", details: String(error) },
+          500
+        );
+      }
+    }
+  )
+  .patch(
+    "/:workspaceId",
+    sessionMiddleware,
+    validator("form", (value) => updateWorkspaceSchema.parse(value)),
+    async (c) => {
+      try {
+        const databases = c.get("databases");
+        const storage = c.get("storage");
+        const user = c.get("user");
+
+        const { workspaceId } = c.req.param();
+        const { name, image } = c.req.valid("form");
+
+        const member = await getMember({
+          databases,
+          workspaceId,
+          userId: user.$id,
+        });
+
+        if (!member || member.role !== MemberRole.ADMIN) {
+          return c.json({ error: "Unauthorized" }, 401);
+        }
+
+        let newImageUrl: string | null | undefined = undefined;
+
+        if (image instanceof File) {
+          try {
+            newImageUrl = await uploadImageAndGetBase64(storage, image);
+          } catch (uploadError: any) {
+            console.error(
+              "Error uploading image for workspace update:",
+              uploadError
+            );
+            return c.json(
+              { error: uploadError.message || "Failed to upload image" },
+              400
+            );
+          }
+        } else if (typeof image === "string") {
+          newImageUrl = image === "" ? null : image;
+        }
+
+        const updatePayload: { name?: string; imageUrl?: string | null } = {};
+
+        if (name !== undefined) {
+          updatePayload.name = name;
+        }
+
+        if (
+          Object.prototype.hasOwnProperty.call(c.req.valid("form"), "image")
+        ) {
+          updatePayload.imageUrl = newImageUrl;
+        }
+
+        const workspace = await databases.updateDocument(
+          DATABASE_ID,
+          WORKSPACES_ID,
+          workspaceId,
+          updatePayload
+        );
+
+        return c.json({ data: workspace });
+      } catch (error) {
+        console.error("Error updating workspace:", error);
+        return c.json(
+          { error: "Failed to update workspace", details: String(error) },
+          500
+        );
       }
     }
   );
