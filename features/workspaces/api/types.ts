@@ -17,3 +17,12 @@ export type responseTypeUpdateWorkspace = InferResponseType<
 export type requestTypeUpdateWorkspace = InferRequestType<
   (typeof client.api.workspaces)[":workspaceId"]["$patch"]
 >;
+
+export type responseTypeDeleteWorkspace = InferResponseType<
+  (typeof client.api.workspaces)[":workspaceId"]["$delete"],
+  200
+>;
+
+export type requestTypeDeleteWorkspace = InferRequestType<
+  (typeof client.api.workspaces)[":workspaceId"]["$delete"]
+>;
