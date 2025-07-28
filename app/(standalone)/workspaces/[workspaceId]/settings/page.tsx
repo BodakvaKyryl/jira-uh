@@ -1,5 +1,5 @@
-import { getWorkspace } from "@/features/workspaces/actions";
 import { UpdateWorkspaceForm } from "@/features/workspaces/components/update-workspace-form";
+import { getWorkspace } from "@/features/workspaces/queries";
 import { requireAuth } from "@/lib/auth-utils";
 import { redirect } from "next/navigation";
 

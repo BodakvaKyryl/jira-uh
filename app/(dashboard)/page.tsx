@@ -1,4 +1,4 @@
-import { getWorkspaces } from "@/features/workspaces/actions";
+import { getWorkspaces } from "@/features/workspaces/queries";
 import { requireAuth } from "@/lib/auth-utils";
 import { redirect } from "next/navigation";
 
