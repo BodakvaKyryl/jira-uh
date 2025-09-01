@@ -26,3 +26,12 @@ export type responseTypeDeleteWorkspace = InferResponseType<
 export type requestTypeDeleteWorkspace = InferRequestType<
   (typeof client.api.workspaces)[":workspaceId"]["$delete"]
 >;
+
+export type responseTypeResetInviteCode = InferResponseType<
+  (typeof client.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"],
+  200
+>;
+
+export type requestTypeResetInviteCode = InferRequestType<
+  (typeof client.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"]
+>;
