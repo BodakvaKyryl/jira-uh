@@ -10,6 +10,10 @@ interface getWorkspaceProps {
   workspaceId: string;
 }
 
+interface getWorkspaceInfoProps {
+  workspaceId: string;
+}
+
 export const getWorkspaces = async () => {
   const emptyState = { documents: [], total: 0 };
   try {
@@ -61,6 +65,25 @@ export const getWorkspace = async ({ workspaceId }: getWorkspaceProps) => {
     );
 
     return workspace;
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+};
+
+export const getWorkspaceInfo = async ({
+  workspaceId,
+}: getWorkspaceInfoProps) => {
+  try {
+    const { databases } = await createSessionClient();
+
+    const workspace = await databases.getDocument<Workspace>(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    );
+
+    return { name: workspace.name };
   } catch (error) {
     console.error("Error:", error);
     return null;

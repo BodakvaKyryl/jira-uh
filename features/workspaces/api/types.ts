@@ -35,3 +35,12 @@ export type responseTypeResetInviteCode = InferResponseType<
 export type requestTypeResetInviteCode = InferRequestType<
   (typeof client.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"]
 >;
+
+export type responseTypeJoinWorkspace = InferResponseType<
+  (typeof client.api.workspaces)[":workspaceId"]["join"]["$post"],
+  200
+>;
+
+export type requestTypeJoinWorkspace = InferRequestType<
+  (typeof client.api.workspaces)[":workspaceId"]["join"]["$post"]
+>;
