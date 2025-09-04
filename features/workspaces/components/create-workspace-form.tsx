@@ -83,7 +83,7 @@ export const CreateWorkspaceForm = ({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Workspace name</FormLabel>
+                    <FormLabel className="text-sm">Workspace name</FormLabel>
                     <FormControl>
                       <Input
                         type="workspaceName"
