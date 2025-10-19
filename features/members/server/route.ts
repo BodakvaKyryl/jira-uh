@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/appwrite";
 import { MiddlewareContext, sessionMiddleware } from "@/lib/session-middleware";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
-import { Query } from "node-appwrite";
+import { AppwriteException, Query } from "node-appwrite";
 import { z } from "zod";
 import { MemberRole } from "../types";
 import { getMember } from "../utils";
@@ -151,9 +151,9 @@ const app = new Hono<MiddlewareContext>()
         await databases.deleteDocument(DATABASE_ID, MEMBERS_ID, memberId);
 
         return c.json({ data: { $id: memberToDelete.$id } });
-      } catch (error: any) {
+      } catch (error) {
         console.error("Error deleting member:", error);
-        if (error.code === 404) {
+        if (error instanceof AppwriteException && error.code === 404) {
           return c.json({ error: "Member not found." }, 404);
         }
         return c.json(
@@ -232,9 +232,9 @@ const app = new Hono<MiddlewareContext>()
         });
 
         return c.json({ data: { $id: memberToUpdate.$id, role: newRole } });
-      } catch (error: any) {
+      } catch (error) {
         console.error("Error updating member role:", error);
-        if (error.code === 404) {
+        if (error instanceof AppwriteException && error.code === 404) {
           return c.json({ error: "Member not found." }, 404);
         }
         return c.json(
