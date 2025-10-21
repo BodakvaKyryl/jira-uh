@@ -1,7 +1,9 @@
+import React from "react";
+
 import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { Navbar } from "@/components/navbar";
+
 import { CreateWorkspaceModal } from "@/features/workspaces/components/create-workspace-modal";
-import React from "react";
 
 interface DashboardLayoutProps {
   children: React.ReactElement;

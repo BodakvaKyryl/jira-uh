@@ -1,26 +1,16 @@
 "use client";
 
-import { DottedSeparator } from "@/components/dotted-separator";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { DottedSeparator } from "@/components/dotted-separator";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
 import { useSignUp } from "../api/use-sign-up";
 import { signUpFormSchema } from "../schemas";
 import { AuthButtons } from "./auth-buttons";
@@ -62,20 +52,14 @@ export const SignUpCard = () => {
       </div>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmitForm)}
-            className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmitForm)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      type="name"
-                      placeholder="Enter your name"
-                      {...field}
-                    />
+                    <Input type="name" placeholder="Enter your name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,11 +71,7 @@ export const SignUpCard = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Enter your email address"
-                      {...field}
-                    />
+                    <Input type="email" placeholder="Enter your email address" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -103,11 +83,7 @@ export const SignUpCard = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password"
-                      {...field}
-                    />
+                    <Input type="password" placeholder="Enter your password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -1,7 +1,9 @@
-import { rpc } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
+import { rpc } from "@/lib/rpc";
+
 import { ResponseTypeLogin } from "./types";
 
 export const useSignOut = () => {

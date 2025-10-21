@@ -1,23 +1,16 @@
-import { client } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  requestTypeResetInviteCode,
-  responseTypeResetInviteCode,
-} from "./types";
+
+import { client } from "@/lib/rpc";
+
+import { requestTypeResetInviteCode, responseTypeResetInviteCode } from "./types";
 
 export const useResetInviteCode = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<
-    responseTypeResetInviteCode,
-    Error,
-    requestTypeResetInviteCode
-  >({
+  const mutation = useMutation<responseTypeResetInviteCode, Error, requestTypeResetInviteCode>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.workspaces[":workspaceId"][
-        "reset-invite-code"
-      ]["$post"]({
+      const response = await client.api.workspaces[":workspaceId"]["reset-invite-code"]["$post"]({
         param,
       });
 

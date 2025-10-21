@@ -1,20 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 
-import { z } from "zod";
 import { useSignIn } from "../api/use-sign-in";
 import { signInFormSchema } from "../schemas";
 import { AuthButtons } from "./auth-buttons";
@@ -44,20 +39,14 @@ export const SignInCard = () => {
       </div>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmitForm)}
-            className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmitForm)} className="space-y-4">
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Enter email address"
-                      {...field}
-                    />
+                    <Input type="email" placeholder="Enter email address" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -70,22 +59,14 @@ export const SignInCard = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter password"
-                      {...field}
-                    />
+                    <Input type="password" placeholder="Enter password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button
-              disabled={isPending}
-              type="submit"
-              size="lg"
-              className="w-full">
+            <Button disabled={isPending} type="submit" size="lg" className="w-full">
               Login
             </Button>
           </form>

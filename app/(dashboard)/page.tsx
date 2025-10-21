@@ -1,6 +1,8 @@
-import { getWorkspaces } from "@/features/workspaces/queries";
-import { requireAuth } from "@/lib/auth-utils";
 import { redirect } from "next/navigation";
+
+import { requireAuth } from "@/lib/auth-utils";
+
+import { getWorkspaces } from "@/features/workspaces/queries";
 
 export default async function Home() {
   await requireAuth();

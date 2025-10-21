@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { useMemo } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface DottedSeparatorProps {
   className?: string;
@@ -35,18 +36,14 @@ export const DottedSeparator = ({
       width: isHorizontal ? "100%" : height,
       height: isHorizontal ? height : "100%",
       backgroundImage: `radial-gradient(circle, ${separatorColor} 1px, transparent 1px)`,
-      backgroundSize: isHorizontal
-        ? `${totalSize}px ${height}`
-        : `${height} ${totalSize}px`,
+      backgroundSize: isHorizontal ? `${totalSize}px ${height}` : `${height} ${totalSize}px`,
       backgroundRepeat: isHorizontal ? "repeat-x" : "repeat-y",
       backgroundPosition: "center",
     };
   }, [color, height, gapSize, dotSize, isHorizontal]);
 
   const containerClasses = cn(
-    isHorizontal
-      ? "flex w-full items-center"
-      : "flex h-full flex-col items-center",
+    isHorizontal ? "flex w-full items-center" : "flex h-full flex-col items-center",
     className
   );
 

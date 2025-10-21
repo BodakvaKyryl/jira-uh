@@ -1,30 +1,24 @@
-import { createAdminClient } from "@/lib/appwrite";
-import { MiddlewareContext, sessionMiddleware } from "@/lib/session-middleware";
 import { Context, Hono } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
 import { validator } from "hono/validator";
 import { ID } from "node-appwrite";
 import { z } from "zod";
+
+import { createAdminClient } from "@/lib/appwrite";
+import { MiddlewareContext, sessionMiddleware } from "@/lib/session-middleware";
+
 import { AUTH_COOKIE, COOKIE_OPTIONS } from "../constants";
 import { signInFormSchema, signUpFormSchema } from "../schemas";
 
-const validateSignIn = validator("json", (value) =>
-  signInFormSchema.parse(value)
-);
+const validateSignIn = validator("json", (value) => signInFormSchema.parse(value));
 
-const validateSignUp = validator("json", (value) =>
-  signUpFormSchema.parse(value)
-);
+const validateSignUp = validator("json", (value) => signUpFormSchema.parse(value));
 
 const setAuthCookie = (c: Context, secret: string) => {
   setCookie(c, AUTH_COOKIE, secret, COOKIE_OPTIONS);
 };
 
-const createUserAndSession = async (
-  name: string,
-  email: string,
-  password: string
-) => {
+const createUserAndSession = async (name: string, email: string, password: string) => {
   const { account } = await createAdminClient();
   await account.create(ID.unique(), email, password, name);
   const session = await account.createEmailPasswordSession(email, password);
@@ -64,10 +58,7 @@ const app = new Hono<MiddlewareContext>()
     } catch (error) {
       console.error("Registration error:", error);
       if (error instanceof z.ZodError) {
-        return c.json(
-          { error: "Validation error", details: error.errors },
-          400
-        );
+        return c.json({ error: "Validation error", details: error.errors }, 400);
       }
       return c.json({ error: "Registration failed" }, 500);
     }

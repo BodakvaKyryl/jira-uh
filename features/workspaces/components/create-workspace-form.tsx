@@ -1,5 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ImageIcon } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import z from "zod";
+
+import { cn } from "@/lib/utils";
+
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -13,14 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ImageIcon } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useRef } from "react";
-import { useForm } from "react-hook-form";
-import z from "zod";
+
 import { useCreateWorkspace } from "../api/use-create-workspace";
 import { createWorkspaceSchema } from "../schemas";
 import { ImageUploadButton } from "./image-upload-button";
@@ -29,9 +32,7 @@ interface CreateWorkspaceFormProps {
   onCancelForm?: () => void;
 }
 
-export const CreateWorkspaceForm = ({
-  onCancelForm,
-}: CreateWorkspaceFormProps) => {
+export const CreateWorkspaceForm = ({ onCancelForm }: CreateWorkspaceFormProps) => {
   const router = useRouter();
   const { mutate, isPending } = useCreateWorkspace();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -69,9 +70,7 @@ export const CreateWorkspaceForm = ({
   return (
     <Card className="h-full w-full border-none shadow-none">
       <CardHeader className="flex px-7">
-        <CardTitle className="text-xl font-bold">
-          Create a new workspace
-        </CardTitle>
+        <CardTitle className="text-xl font-bold">Create a new workspace</CardTitle>
       </CardHeader>
       <DottedSeparator className="px-7" />
       <CardContent className="px-7">
@@ -85,11 +84,7 @@ export const CreateWorkspaceForm = ({
                   <FormItem>
                     <FormLabel className="text-sm">Workspace name</FormLabel>
                     <FormControl>
-                      <Input
-                        type="workspaceName"
-                        placeholder="Enter workspace name"
-                        {...field}
-                      />
+                      <Input type="workspaceName" placeholder="Enter workspace name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -1,8 +1,11 @@
-import { Toaster } from "@/components/ui/sonner";
-import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+
+import { cn } from "@/lib/utils";
+
+import { Toaster } from "@/components/ui/sonner";
+
 import "./globals.css";
 import Providers from "./providers";
 

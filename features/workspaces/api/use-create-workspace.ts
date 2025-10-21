@@ -1,19 +1,14 @@
-import { client } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  requestTypeCreateWorkspace,
-  responseTypeCreateWorkspace,
-} from "./types";
+
+import { client } from "@/lib/rpc";
+
+import { requestTypeCreateWorkspace, responseTypeCreateWorkspace } from "./types";
 
 export const useCreateWorkspace = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<
-    responseTypeCreateWorkspace,
-    Error,
-    requestTypeCreateWorkspace
-  >({
+  const mutation = useMutation<responseTypeCreateWorkspace, Error, requestTypeCreateWorkspace>({
     mutationFn: async ({ form }) => {
       const response = await client.api.workspaces["$post"]({ form });
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+
+import { Button } from "@/components/ui/button";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -25,9 +26,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
             </Link>
           </Button>
         </nav>
-        <div className="flex flex-col items-center justify-center pt-4 md:pt-14">
-          {children}
-        </div>
+        <div className="flex flex-col items-center justify-center pt-4 md:pt-14">{children}</div>
       </div>
     </main>
   );

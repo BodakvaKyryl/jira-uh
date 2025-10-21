@@ -1,9 +1,10 @@
-import { DottedSeparator } from "@/components/dotted-separator";
-import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
+
+import { DottedSeparator } from "@/components/dotted-separator";
+import { Button } from "@/components/ui/button";
+import { CardContent } from "@/components/ui/card";
 
 interface AuthButtonsProps {
   showSeparator?: boolean;

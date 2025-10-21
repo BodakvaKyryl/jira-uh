@@ -1,9 +1,9 @@
-import "server-only";
-
-import { AUTH_COOKIE } from "@/features/auth/constants";
 import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 import { Account, Client, Databases, Models, Storage } from "node-appwrite";
+import "server-only";
+
+import { AUTH_COOKIE } from "@/features/auth/constants";
 
 export type MiddlewareContext = {
   Variables: {
@@ -43,9 +43,6 @@ export const sessionMiddleware = createMiddleware(async (c, next) => {
     await next();
   } catch (error) {
     console.error("Session middleware error:", error);
-    return c.json(
-      { error: "Authentication failed", details: String(error) },
-      500
-    );
+    return c.json({ error: "Authentication failed", details: String(error) }, 500);
   }
 });

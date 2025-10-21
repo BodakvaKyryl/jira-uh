@@ -1,5 +1,6 @@
-import { getCurrentUser } from "@/features/auth/queries";
 import { redirect } from "next/navigation";
+
+import { getCurrentUser } from "@/features/auth/queries";
 
 export const requireAuth = async () => {
   const user = await getCurrentUser();

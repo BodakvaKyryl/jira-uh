@@ -1,5 +1,11 @@
 "use client";
 
+import { ArrowLeftIcon, MoreVerticalIcon } from "lucide-react";
+import Link from "next/link";
+import { Fragment } from "react";
+
+import { useConfirm } from "@/hooks/use-confirm";
+
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,16 +16,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+
 import { useDeleteMember } from "@/features/members/api/use-delete-member";
 import { useGetMembers } from "@/features/members/api/use-get-members";
 import { useUpdateMember } from "@/features/members/api/use-update-member";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { MemberRole } from "@/features/members/types";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
-import { useConfirm } from "@/hooks/use-confirm";
-import { ArrowLeftIcon, MoreVerticalIcon } from "lucide-react";
-import Link from "next/link";
-import { Fragment } from "react";
 
 export const MembersList = () => {
   const workspaceId = useWorkspaceId();
@@ -30,11 +33,10 @@ export const MembersList = () => {
   );
 
   const { data } = useGetMembers({ workspaceId });
-  const { mutate: deleteMember, isPending: isDeletingMember } = useDeleteMember(
-    { workspaceId }
-  );
-  const { mutate: updateMember, isPending: isUpdatingMember } =
-    useUpdateMember();
+  const { mutate: deleteMember, isPending: isDeletingMember } = useDeleteMember({
+    workspaceId,
+  });
+  const { mutate: updateMember, isPending: isUpdatingMember } = useUpdateMember();
 
   const handleUpdateMember = (memberId: string, role: MemberRole) => {
     updateMember({ json: { role }, param: { memberId } });
@@ -73,40 +75,27 @@ export const MembersList = () => {
         {data?.documents.map((member, index) => (
           <Fragment key={member.$id}>
             <div className="flex items-center gap-2">
-              <MemberAvatar
-                className="size-10"
-                fallbackClassName="text-lg"
-                name={member.name}
-              />
+              <MemberAvatar className="size-10" fallbackClassName="text-lg" name={member.name} />
               <div className="flex flex-col">
                 <p className="text-sm font-medium">{member.name}</p>
-                <p className="text-xs font-medium text-neutral-500">
-                  {member.email}
-                </p>
+                <p className="text-xs font-medium text-neutral-500">{member.email}</p>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    className="ml-auto"
-                    variant={"secondary"}
-                    size={"icon"}>
+                  <Button className="ml-auto" variant={"secondary"} size={"icon"}>
                     <MoreVerticalIcon className="text-muted-foreground size-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="bottom" align="end">
                   <DropdownMenuItem
                     className="font-medium"
-                    onClick={() =>
-                      handleUpdateMember(member.$id, MemberRole.ADMIN)
-                    }
+                    onClick={() => handleUpdateMember(member.$id, MemberRole.ADMIN)}
                     disabled={isUpdatingMember}>
                     Set as Admin
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="font-medium"
-                    onClick={() =>
-                      handleUpdateMember(member.$id, MemberRole.MEMBER)
-                    }
+                    onClick={() => handleUpdateMember(member.$id, MemberRole.MEMBER)}
                     disabled={isUpdatingMember}>
                     Set as Member
                   </DropdownMenuItem>
@@ -119,9 +108,7 @@ export const MembersList = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            {index < data.documents.length - 1 && (
-              <Separator className="my-2.5" />
-            )}
+            {index < data.documents.length - 1 && <Separator className="my-2.5" />}
           </Fragment>
         ))}
       </CardContent>

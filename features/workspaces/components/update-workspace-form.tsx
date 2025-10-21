@@ -1,5 +1,18 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+
+import { cn } from "@/lib/utils";
+
+import { useConfirm } from "@/hooks/use-confirm";
+
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -13,16 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useConfirm } from "@/hooks/use-confirm";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import z from "zod";
+
 import { useDeleteWorkspace } from "../api/use-delete-workspace";
 import { useResetInviteCode } from "../api/use-reset-invite-code";
 import { useUpdateWorkspace } from "../api/use-update-workspace";
@@ -35,18 +39,13 @@ interface UpdateWorkspaceForms {
   initialValues: Workspace;
 }
 
-export const UpdateWorkspaceForm = ({
-  onCancelForm,
-  initialValues,
-}: UpdateWorkspaceForms) => {
+export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorkspaceForms) => {
   const router = useRouter();
   const { mutate, isPending } = useUpdateWorkspace();
 
-  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } =
-    useDeleteWorkspace();
+  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } = useDeleteWorkspace();
 
-  const { mutate: resetInviteCode, isPending: isResettingInviteCode } =
-    useResetInviteCode();
+  const { mutate: resetInviteCode, isPending: isResettingInviteCode } = useResetInviteCode();
 
   const [DeleteDialog, confirmDelete] = useConfirm(
     "Delete this workspace?",
@@ -141,17 +140,13 @@ export const UpdateWorkspaceForm = ({
       <ResetDialog />
       <Card className="h-full w-full border-none shadow-none">
         <CardHeader className="flex justify-between px-7">
-          <CardTitle className="text-xl font-bold">
-            {initialValues.name}
-          </CardTitle>
+          <CardTitle className="text-xl font-bold">{initialValues.name}</CardTitle>
           <Button
             size={"sm"}
             variant={"secondary"}
             disabled={isLoading}
             onClick={
-              onCancelForm
-                ? onCancelForm
-                : () => router.push(`/workspaces/${initialValues.$id}`)
+              onCancelForm ? onCancelForm : () => router.push(`/workspaces/${initialValues.$id}`)
             }>
             <ArrowLeftIcon className="mr-2 size-4" />
             Back
@@ -264,11 +259,7 @@ export const UpdateWorkspaceForm = ({
             </p>
             <div className="mt-4">
               <div className="flex w-full items-center gap-x-2">
-                <Input
-                  readOnly
-                  value={fullInviteLink}
-                  aria-label="Invite link"
-                />
+                <Input readOnly value={fullInviteLink} aria-label="Invite link" />
                 <Button
                   onClick={handleCopyInviteLink}
                   variant={"secondary"}
@@ -297,8 +288,7 @@ export const UpdateWorkspaceForm = ({
           <div className="flex flex-col">
             <h3 className="font-bold">Danger Zone</h3>
             <p className="text-muted-foreground text-sm">
-              Deleting a workspace is irreversible and will remove all
-              associated data
+              Deleting a workspace is irreversible and will remove all associated data
             </p>
             <DottedSeparator className="py-7" />
             <Button

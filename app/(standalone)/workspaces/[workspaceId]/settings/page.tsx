@@ -1,7 +1,9 @@
+import { redirect } from "next/navigation";
+
+import { requireAuth } from "@/lib/auth-utils";
+
 import { UpdateWorkspaceForm } from "@/features/workspaces/components/update-workspace-form";
 import { getWorkspace } from "@/features/workspaces/queries";
-import { requireAuth } from "@/lib/auth-utils";
-import { redirect } from "next/navigation";
 
 interface WorkspaceIdSettingsPageProps {
   params: Promise<{
@@ -9,9 +11,7 @@ interface WorkspaceIdSettingsPageProps {
   }>;
 }
 
-const WorkspaceIdSettingsPage = async ({
-  params,
-}: WorkspaceIdSettingsPageProps) => {
+const WorkspaceIdSettingsPage = async ({ params }: WorkspaceIdSettingsPageProps) => {
   await requireAuth();
 
   const { workspaceId } = await params;

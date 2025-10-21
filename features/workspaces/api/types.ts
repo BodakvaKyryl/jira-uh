@@ -1,13 +1,12 @@
-import { client } from "@/lib/rpc";
 import { InferRequestType, InferResponseType } from "hono";
+
+import { client } from "@/lib/rpc";
 
 export type responseTypeCreateWorkspace = InferResponseType<
   (typeof client.api.workspaces)["$post"]
 >;
 
-export type requestTypeCreateWorkspace = InferRequestType<
-  (typeof client.api.workspaces)["$post"]
->;
+export type requestTypeCreateWorkspace = InferRequestType<(typeof client.api.workspaces)["$post"]>;
 
 export type responseTypeUpdateWorkspace = InferResponseType<
   (typeof client.api.workspaces)[":workspaceId"]["$patch"],

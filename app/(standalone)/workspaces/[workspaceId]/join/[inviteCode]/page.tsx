@@ -1,7 +1,10 @@
-import { JoinWorkspaceForm } from "@/components/join-workspace-form";
-import { getWorkspaceInfo } from "@/features/workspaces/queries";
-import { requireAuth } from "@/lib/auth-utils";
 import { redirect } from "next/navigation";
+
+import { requireAuth } from "@/lib/auth-utils";
+
+import { JoinWorkspaceForm } from "@/components/join-workspace-form";
+
+import { getWorkspaceInfo } from "@/features/workspaces/queries";
 
 interface WorkspaceIdJoinPageProps {
   params: {

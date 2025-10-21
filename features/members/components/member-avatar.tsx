@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+
 import { Avatar, AvatarFallback } from "../../../components/ui/avatar";
 
 interface MemberAvatarProps {
@@ -7,11 +8,7 @@ interface MemberAvatarProps {
   fallbackClassName?: string;
 }
 
-export const MemberAvatar = ({
-  name,
-  className,
-  fallbackClassName,
-}: MemberAvatarProps) => {
+export const MemberAvatar = ({ name, className, fallbackClassName }: MemberAvatarProps) => {
   return (
     <Avatar className={cn("size-5 rounded-full transition", className)}>
       <AvatarFallback

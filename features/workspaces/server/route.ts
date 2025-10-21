@@ -1,13 +1,17 @@
-import { DATABASE_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config";
-import { MemberRole } from "@/features/members/types";
-import { getMember } from "@/features/members/utils";
-import { uploadImageAndGetBase64 } from "@/lib/appwrite";
-import { MiddlewareContext, sessionMiddleware } from "@/lib/session-middleware";
-import { generateInviteCodeWorkspace } from "@/lib/utils";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { ID, Permission, Query, Role } from "node-appwrite";
 import { z } from "zod";
+
+import { DATABASE_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config";
+
+import { uploadImageAndGetBase64 } from "@/lib/appwrite";
+import { MiddlewareContext, sessionMiddleware } from "@/lib/session-middleware";
+import { generateInviteCodeWorkspace } from "@/lib/utils";
+
+import { MemberRole } from "@/features/members/types";
+import { getMember } from "@/features/members/utils";
+
 import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
 import { Workspace } from "../types";
 
@@ -27,15 +31,11 @@ const app = new Hono<MiddlewareContext>()
 
     const workspaceIds = members.documents.map((member) => member.workspaceId);
 
-    const workspaces = await databases.listDocuments(
-      DATABASE_ID,
-      WORKSPACES_ID,
-      [
-        Query.orderDesc("$createdAt"),
-        Query.contains("$id", workspaceIds),
-        Query.limit(5000),
-      ]
-    );
+    const workspaces = await databases.listDocuments(DATABASE_ID, WORKSPACES_ID, [
+      Query.orderDesc("$createdAt"),
+      Query.contains("$id", workspaceIds),
+      Query.limit(5000),
+    ]);
 
     return c.json({ data: workspaces });
   })
@@ -56,14 +56,8 @@ const app = new Hono<MiddlewareContext>()
           try {
             uploadedImageUrl = await uploadImageAndGetBase64(storage, image);
           } catch (uploadError: any) {
-            console.error(
-              "Error uploading image for new workspace:",
-              uploadError
-            );
-            return c.json(
-              { error: uploadError.message || "Failed to upload image" },
-              400
-            );
+            console.error("Error uploading image for new workspace:", uploadError);
+            return c.json({ error: uploadError.message || "Failed to upload image" }, 400);
           }
         }
 
@@ -94,10 +88,7 @@ const app = new Hono<MiddlewareContext>()
         return c.json({ data: { $id: workspace.$id } });
       } catch (error) {
         console.error("Error creating workspace:", error);
-        return c.json(
-          { error: "Failed to create workspace", details: String(error) },
-          500
-        );
+        return c.json({ error: "Failed to create workspace", details: String(error) }, 500);
       }
     }
   )
@@ -130,14 +121,8 @@ const app = new Hono<MiddlewareContext>()
           try {
             newImageUrl = await uploadImageAndGetBase64(storage, image);
           } catch (uploadError: any) {
-            console.error(
-              "Error uploading image for workspace update:",
-              uploadError
-            );
-            return c.json(
-              { error: uploadError.message || "Failed to upload image" },
-              400
-            );
+            console.error("Error uploading image for workspace update:", uploadError);
+            return c.json({ error: uploadError.message || "Failed to upload image" }, 400);
           }
         } else if (typeof image === "string") {
           newImageUrl = image === "" ? null : image;
@@ -149,9 +134,7 @@ const app = new Hono<MiddlewareContext>()
           updatePayload.name = name;
         }
 
-        if (
-          Object.prototype.hasOwnProperty.call(c.req.valid("form"), "image")
-        ) {
+        if (Object.prototype.hasOwnProperty.call(c.req.valid("form"), "image")) {
           updatePayload.imageUrl = newImageUrl;
         }
 
@@ -165,10 +148,7 @@ const app = new Hono<MiddlewareContext>()
         return c.json({ data: workspace });
       } catch (error) {
         console.error("Error updating workspace:", error);
-        return c.json(
-          { error: "Failed to update workspace", details: String(error) },
-          500
-        );
+        return c.json({ error: "Failed to update workspace", details: String(error) }, 500);
       }
     }
   )
@@ -193,10 +173,7 @@ const app = new Hono<MiddlewareContext>()
       return c.json({ data: { $id: workspaceId } });
     } catch (error) {
       console.error("Error deleting workspace:", error);
-      return c.json(
-        { error: "Failed to delete workspace", details: String(error) },
-        500
-      );
+      return c.json({ error: "Failed to delete workspace", details: String(error) }, 500);
     }
   })
   .post("/:workspaceId/reset-invite-code", sessionMiddleware, async (c) => {
@@ -215,22 +192,14 @@ const app = new Hono<MiddlewareContext>()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      const workspace = await databases.updateDocument(
-        DATABASE_ID,
-        WORKSPACES_ID,
-        workspaceId,
-        {
-          inviteCode: generateInviteCodeWorkspace(8),
-        }
-      );
+      const workspace = await databases.updateDocument(DATABASE_ID, WORKSPACES_ID, workspaceId, {
+        inviteCode: generateInviteCodeWorkspace(8),
+      });
 
       return c.json({ data: workspace });
     } catch (error) {
       console.error("Error resetting invite code:", error);
-      return c.json(
-        { error: "Failed to reset invite code", details: String(error) },
-        500
-      );
+      return c.json({ error: "Failed to reset invite code", details: String(error) }, 500);
     }
   })
   .post(
@@ -277,10 +246,7 @@ const app = new Hono<MiddlewareContext>()
         if (appwriteError.code === 404) {
           return c.json({ error: "Workspace not found" }, 404);
         }
-        return c.json(
-          { error: "Failed to join workspace", details: String(error) },
-          500
-        );
+        return c.json({ error: "Failed to join workspace", details: String(error) }, 500);
       }
     }
   );

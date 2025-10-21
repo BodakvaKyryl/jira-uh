@@ -1,6 +1,5 @@
 {
-  "jsxBracketSameLine": false,
-  "printWidth": 80,
+  "printWidth": 100,
   "tabWidth": 2,
   "useTabs": false,
   "semi": true,
@@ -12,12 +11,17 @@
   "endOfLine": "lf",
   "tailwindFunctions": ["cva", "classNames", "cn"],
   "tailwindAttributes": ["classNames"],
+  "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "^@/config",
+    "^@/lib/(.*)$",
+    "^@/hooks/(.*)$",
+    "^@/components/(.*)$",
+    "^@/features/(.*)$",
+    "^[./]"
+  ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "importOrderBuiltinModulesToTop": true,
-  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
-  "importOrderMergeDuplicateImports": true,
-  "importOrderCombineTypeAndValueImports": true,
-  "importOrderSeparateImportTypeGroups": true,
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"]
 }

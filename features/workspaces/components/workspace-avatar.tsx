@@ -1,5 +1,7 @@
-import { cn } from "@/lib/utils";
 import Image from "next/image";
+
+import { cn } from "@/lib/utils";
+
 import { Avatar, AvatarFallback } from "../../../components/ui/avatar";
 
 interface WorkspaceAvatarProps {
@@ -8,25 +10,11 @@ interface WorkspaceAvatarProps {
   className?: string;
 }
 
-export const WorkspaceAvatar = ({
-  image,
-  name,
-  className,
-}: WorkspaceAvatarProps) => {
+export const WorkspaceAvatar = ({ image, name, className }: WorkspaceAvatarProps) => {
   if (image) {
     return (
-      <div
-        className={cn(
-          "rounder-md relative size-10 overflow-hidden",
-          className
-        )}>
-        <Image
-          src={image}
-          alt={""}
-          width={40}
-          height={40}
-          className="object-cover"
-        />
+      <div className={cn("rounder-md relative size-10 overflow-hidden", className)}>
+        <Image src={image} alt={""} width={40} height={40} className="object-cover" />
       </div>
     );
   }

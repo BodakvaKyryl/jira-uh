@@ -1,13 +1,8 @@
+import React, { JSX, useState } from "react";
+
 import { ResponsiveModal } from "@/components/responsive-modal";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import React, { JSX, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const useConfirm = (
   title: string,
@@ -47,16 +42,10 @@ export const useConfirm = (
             <CardDescription>{message}</CardDescription>
           </CardHeader>
           <div className="flex w-full flex-col items-center justify-end gap-x-2 gap-y-2 pt-4 lg:flex-row">
-            <Button
-              onClick={handleCancel}
-              variant="outline"
-              className="w-full lg:w-auto">
+            <Button onClick={handleCancel} variant="outline" className="w-full lg:w-auto">
               Cancel
             </Button>
-            <Button
-              onClick={handleConfirm}
-              variant={variant}
-              className="w-full lg:w-auto">
+            <Button onClick={handleConfirm} variant={variant} className="w-full lg:w-auto">
               Confirm
             </Button>
           </div>

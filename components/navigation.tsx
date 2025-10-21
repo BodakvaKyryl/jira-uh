@@ -1,16 +1,13 @@
 "use client";
 
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
-import { cn } from "@/lib/utils";
 import { SettingsIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  GoCheckCircle,
-  GoCheckCircleFill,
-  GoHome,
-  GoHomeFill,
-} from "react-icons/go";
+import { GoCheckCircle, GoCheckCircleFill, GoHome, GoHomeFill } from "react-icons/go";
+
+import { cn } from "@/lib/utils";
+
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 
 const routes = [
   {
@@ -57,12 +54,7 @@ export const Navigation = () => {
                 "hover:text-primary flex items-center gap-2.5 rounded-md p-2.5 font-medium text-neutral-500 transition",
                 isActive && "text-primary bg-white shadow-sm hover:opacity-100"
               )}>
-              <Icon
-                className={cn(
-                  "size-5",
-                  isActive ? "text-primary" : "text-neutral-500"
-                )}
-              />
+              <Icon className={cn("size-5", isActive ? "text-primary" : "text-neutral-500")} />
               {item.label}
             </div>
           </Link>

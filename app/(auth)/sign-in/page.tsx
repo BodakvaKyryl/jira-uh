@@ -1,5 +1,6 @@
-import { SignInCard } from "@/features/auth/components/sign-in-card";
 import { requireGuest } from "@/lib/auth-utils";
+
+import { SignInCard } from "@/features/auth/components/sign-in-card";
 
 const SignInPage = async () => {
   await requireGuest();

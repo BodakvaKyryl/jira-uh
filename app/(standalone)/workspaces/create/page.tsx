@@ -1,5 +1,6 @@
-import { CreateWorkspaceForm } from "@/features/workspaces/components/create-workspace-form";
 import { requireAuth } from "@/lib/auth-utils";
+
+import { CreateWorkspaceForm } from "@/features/workspaces/components/create-workspace-form";
 
 const WorkspaceCreatePage = async () => {
   await requireAuth();

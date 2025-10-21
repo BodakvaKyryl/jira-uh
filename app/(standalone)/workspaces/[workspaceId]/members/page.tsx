@@ -1,5 +1,6 @@
-import { MembersList } from "@/features/auth/components/members-list";
 import { requireAuth } from "@/lib/auth-utils";
+
+import { MembersList } from "@/features/auth/components/members-list";
 
 const WorkspaceIdMembersPage = async () => {
   await requireAuth();

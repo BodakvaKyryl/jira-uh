@@ -1,6 +1,7 @@
-import { client } from "@/lib/rpc";
 import { useQuery } from "@tanstack/react-query";
 import { Models } from "node-appwrite";
+
+import { client } from "@/lib/rpc";
 
 type UserType = Models.User<Models.Preferences> | null;
 
@@ -18,11 +19,7 @@ export const useCurrent = () => {
         const response = await client.api.auth.current.$get();
 
         if (!response.ok) {
-          console.warn(
-            "Failed to fetch current user:",
-            response.status,
-            response.statusText
-          );
+          console.warn("Failed to fetch current user:", response.status, response.statusText);
           return null;
         }
 

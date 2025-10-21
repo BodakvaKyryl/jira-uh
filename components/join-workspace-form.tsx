@@ -1,27 +1,21 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { useJoinWorkspace } from "@/features/workspaces/api/use-join-workspace";
 import { useInviteCode } from "@/features/workspaces/hooks/use-invite-code";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 import { DottedSeparator } from "./dotted-separator";
 import { Button } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 interface JoinWorkspaceFormProps {
   initialValues: { name: string };
 }
 
-export const JoinWorkspaceForm = ({
-  initialValues,
-}: JoinWorkspaceFormProps) => {
+export const JoinWorkspaceForm = ({ initialValues }: JoinWorkspaceFormProps) => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
   const inviteCode = useInviteCode();
@@ -46,8 +40,7 @@ export const JoinWorkspaceForm = ({
       <CardHeader className="px-7">
         <CardTitle className="text-xl font-bold">Join Workspace</CardTitle>
         <CardDescription className="">
-          You&apos;ve been invited to join <strong>{initialValues.name}</strong>{" "}
-          workspace.
+          You&apos;ve been invited to join <strong>{initialValues.name}</strong> workspace.
         </CardDescription>
       </CardHeader>
       <DottedSeparator className="px-7" />

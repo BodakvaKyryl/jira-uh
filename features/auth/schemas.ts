@@ -8,8 +8,5 @@ export const signInFormSchema = z.object({
 export const signUpFormSchema = z.object({
   name: z.string().trim().min(1, "Name is required!"),
   email: z.string().email("Write your email!"),
-  password: z
-    .string()
-    .min(8, "Password is required!")
-    .max(60, "Password is too long!"),
+  password: z.string().min(8, "Password is required!").max(60, "Password is too long!"),
 });

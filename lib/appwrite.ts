@@ -1,14 +1,9 @@
-import { IMAGES_BUCKET_ID } from "@/config";
-import { AUTH_COOKIE } from "@/features/auth/constants";
 import { cookies } from "next/dist/server/request/cookies";
-import {
-  Account,
-  Storage as AppwriteStorage,
-  Client,
-  Databases,
-  ID,
-  Users,
-} from "node-appwrite";
+import { Account, Storage as AppwriteStorage, Client, Databases, ID, Users } from "node-appwrite";
+
+import { IMAGES_BUCKET_ID } from "@/config";
+
+import { AUTH_COOKIE } from "@/features/auth/constants";
 
 export async function createSessionClient() {
   const client = new Client()
