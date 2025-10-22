@@ -27,12 +27,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { ImageUploadButton } from "../../../components/image-upload-button";
 import { useDeleteWorkspace } from "../api/use-delete-workspace";
 import { useResetInviteCode } from "../api/use-reset-invite-code";
 import { useUpdateWorkspace } from "../api/use-update-workspace";
 import { updateWorkspaceSchema } from "../schemas";
 import { Workspace } from "../types";
-import { ImageUploadButton } from "./image-upload-button";
 
 interface UpdateWorkspaceForms {
   onCancelForm?: () => void;
