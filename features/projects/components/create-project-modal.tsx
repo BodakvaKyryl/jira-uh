@@ -1,8 +1,8 @@
 "use client";
 
 import { ResponsiveModal } from "@/components/responsive-modal";
-import { CreateProjectForm } from "@/features/projects/components/create-project-form";
 
+import { CreateProjectForm } from "@/features/projects/components/create-project-form";
 import { UseCreateProjectModal } from "@/features/projects/hooks/use-create-project-modal";
 
 export const CreateProjectModal = () => {

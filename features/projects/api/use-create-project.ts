@@ -4,7 +4,9 @@ import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<(typeof client.api.projects)["$post"], 200>;
+type RawResponseType = InferResponseType<(typeof client.api.projects)["$post"], 200>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ResponseType = [RawResponseType] extends [never] ? any : RawResponseType;
 type RequestType = InferRequestType<(typeof client.api.projects)["$post"]>;
 
 export const useCreateProject = () => {
@@ -18,7 +20,7 @@ export const useCreateProject = () => {
         throw new Error("Failed to create project");
       }
 
-      return await response.json();
+      return (await response.json()) as ResponseType;
     },
     onSuccess: () => {
       toast.success("Project created!");
