@@ -7,6 +7,7 @@ import { RiAddCircleFill } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 
 import { useGetProjects } from "@/features/projects/api/use-get-project";
+import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { UseCreateProjectModal } from "@/features/projects/hooks/use-create-project-modal";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 
@@ -43,6 +44,7 @@ export const Projects = () => {
                 "flex cursor-pointer items-center gap-2.5 rounded-md p-2.5 text-neutral-500 transition hover:opacity-75",
                 isActive && "text-primary bg-white shadow-sm hover:opacity-100"
               )}>
+              <ProjectAvatar name={project.name} image={project.image} />
               <span className="truncate">{project.name}</span>
             </div>
           </Link>
