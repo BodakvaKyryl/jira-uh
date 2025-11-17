@@ -13,8 +13,8 @@ const ProjectIdSettingsPage = async ({ params }: ProjectIdSettingsPageProps) => 
   await requireAuth();
 
   const { projectId } = await params;
+
   const initialValues = await getProject({ projectId });
-  // const initialValues = await getProject({ projectId: params.projectId });
 
   return (
     <div className="w-full lg:max-w-xl">

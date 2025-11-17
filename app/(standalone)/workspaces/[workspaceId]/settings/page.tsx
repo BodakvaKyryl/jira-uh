@@ -13,7 +13,6 @@ const WorkspaceIdSettingsPage = async ({ params }: WorkspaceIdSettingsPageProps)
   await requireAuth();
 
   const { workspaceId } = await params;
-
   const initialValues = await getWorkspace({ workspaceId });
 
   return (
