@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
-
 import { requireAuth } from "@/lib/auth-utils";
 
 import { UpdateWorkspaceForm } from "@/features/workspaces/components/update-workspace-form";
@@ -15,9 +13,8 @@ const WorkspaceIdSettingsPage = async ({ params }: WorkspaceIdSettingsPageProps)
   await requireAuth();
 
   const { workspaceId } = await params;
-  const initialValues = await getWorkspace({ workspaceId });
 
-  if (!initialValues) redirect(`/workspaces/${workspaceId}`);
+  const initialValues = await getWorkspace({ workspaceId });
 
   return (
     <div className="w-full lg:max-w-xl">

@@ -17,7 +17,8 @@ interface ProjectIdPageProps {
 const ProjectIdPage = async ({ params }: ProjectIdPageProps) => {
   await requireAuth();
 
-  const initialValues = await getProject({ projectId: params.projectId });
+  const { projectId } = await params;
+  const initialValues = await getProject({ projectId });
 
   if (!initialValues) throw new Error("Project not found");
 

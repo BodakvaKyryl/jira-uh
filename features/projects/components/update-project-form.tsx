@@ -1,12 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import z from "zod";
 
 import { cn } from "@/lib/utils";
@@ -27,60 +26,43 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { ImageUploadButton } from "../../../components/image-upload-button";
-import { useDeleteWorkspace } from "../api/use-delete-workspace";
-import { useResetInviteCode } from "../api/use-reset-invite-code";
-import { useUpdateWorkspace } from "../api/use-update-workspace";
-import { updateWorkspaceSchema } from "../schemas";
-import { Workspace } from "../types";
+import { useDeleteProject } from "@/features/projects/api/use-delete-project";
+import { useUpdateProject } from "@/features/projects/api/use-update-project";
+import { updateProjectSchema } from "@/features/projects/schemas";
+import { Project } from "@/features/projects/types";
 
-interface UpdateWorkspaceForms {
+import { ImageUploadButton } from "../../../components/image-upload-button";
+
+interface UpdateProjectForms {
   onCancelForm?: () => void;
-  initialValues: Workspace;
+  initialValues: Project;
 }
 
-export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorkspaceForms) => {
+export const UpdateProjectForm = ({ onCancelForm, initialValues }: UpdateProjectForms) => {
   const router = useRouter();
-  const { mutate, isPending } = useUpdateWorkspace();
+  const { mutate, isPending } = useUpdateProject();
 
-  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } = useDeleteWorkspace();
-
-  const { mutate: resetInviteCode, isPending: isResettingInviteCode } = useResetInviteCode();
+  const { mutate: deleteProject, isPending: isDeletingProject } = useDeleteProject();
 
   const [DeleteDialog, confirmDelete] = useConfirm(
-    "Delete this workspace?",
+    "Delete this project?",
     "This action can't be undone.",
     "destructive"
   );
 
-  const [ResetDialog, confirmReset] = useConfirm(
-    "Reset invite link for this workspace?",
-    "This will invalidate the the current invite link",
-    "destructive"
-  );
-
   const inputRef = useRef<HTMLInputElement>(null);
-  const [fullInviteLink, setFullInviteLink] = useState("");
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setFullInviteLink(
-        `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`
-      );
-    }
-  }, [initialValues.$id, initialValues.inviteCode]);
-
-  const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
-    resolver: zodResolver(updateWorkspaceSchema),
+  const form = useForm<z.infer<typeof updateProjectSchema>>({
+    resolver: zodResolver(updateProjectSchema),
     defaultValues: { ...initialValues, image: initialValues.imageUrl ?? "" },
   });
 
-  const onSubmitForm = (values: z.infer<typeof updateWorkspaceSchema>) => {
+  const onSubmitForm = (values: z.infer<typeof updateProjectSchema>) => {
     const finalValues = {
       ...values,
       image: values.image instanceof File ? values.image : "",
     };
-    mutate({ form: finalValues, param: { workspaceId: initialValues.$id } });
+    mutate({ form: finalValues, param: { projectId: initialValues.$id } });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,37 +72,26 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
     }
   };
 
-  const handleCopyInviteLink = () => {
-    navigator.clipboard
-      .writeText(fullInviteLink)
-      .then(() => toast.success("Invite link copied to clipboard"));
-  };
-
-  const handleResetInviteLink = async () => {
-    const acceptReset = await confirmReset();
-    if (!acceptReset) return;
-    resetInviteCode({ param: { workspaceId: initialValues.$id } });
-  };
-
   const handleDeleteWorkspace = async () => {
     const acceptDelete = await confirmDelete();
+
     if (!acceptDelete) return;
-    deleteWorkspace(
-      { param: { workspaceId: initialValues.$id } },
+
+    deleteProject(
+      { param: { projectId: initialValues.$id } },
       {
         onSuccess: () => {
-          router.push("/");
+          router.push(`/workspaces/${initialValues.workspaceId}`);
         },
       }
     );
   };
 
-  const isLoading = isPending || isDeletingWorkspace;
+  const isLoading = isPending || isDeletingProject;
 
   return (
     <div className="flex flex-col gap-y-4">
       <DeleteDialog />
-      <ResetDialog />
       <Card className="h-full w-full border-none shadow-none">
         <CardHeader className="flex justify-between px-7">
           <CardTitle className="text-xl font-bold">{initialValues.name}</CardTitle>
@@ -129,7 +100,12 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
             variant={"secondary"}
             disabled={isLoading}
             onClick={
-              onCancelForm ? onCancelForm : () => router.push(`/workspaces/${initialValues.$id}`)
+              onCancelForm
+                ? onCancelForm
+                : () =>
+                    router.push(
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}`
+                    )
             }>
             <ArrowLeftIcon className="mr-2 size-4" />
             Back
@@ -145,11 +121,11 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm">Workspace name</FormLabel>
+                      <FormLabel className="text-sm">Project name</FormLabel>
                       <FormControl>
                         <Input
-                          type="workspaceName"
-                          placeholder="Enter workspace name"
+                          type="projectName"
+                          placeholder="Enter project name"
                           disabled={isLoading}
                           {...field}
                         />
@@ -172,7 +148,7 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
                                   ? URL.createObjectURL(field.value)
                                   : field.value
                               }
-                              alt={"workspace logo"}
+                              alt={"project logo"}
                               className="object-cover"
                               fill
                             />
@@ -185,7 +161,7 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
                           </Avatar>
                         )}
                         <div className="flex flex-col">
-                          <p className="text-sm">Workspace icon</p>
+                          <p className="text-sm">Project icon</p>
                           <p className="text-muted-foreground text-xs">
                             JPG, PNG, SVG or JPEG, max 1MB
                           </p>
@@ -226,7 +202,7 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
                   Cancel
                 </Button>
                 <Button disabled={isLoading} size={"lg"}>
-                  Update Workspace
+                  Update Project
                 </Button>
               </div>
             </form>
@@ -236,42 +212,9 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
       <Card className="h-full w-full border-none shadow-none">
         <CardContent className="p-x-7">
           <div className="flex flex-col">
-            <h3 className="font-bold">Invite Members</h3>
-            <p className="text-muted-foreground text-sm">
-              Use the invite link to add members to your workspace.
-            </p>
-            <div className="mt-4">
-              <div className="flex w-full items-center gap-x-2">
-                <Input readOnly value={fullInviteLink} aria-label="Invite link" />
-                <Button
-                  onClick={handleCopyInviteLink}
-                  variant={"secondary"}
-                  size={"lg"}
-                  disabled={isLoading}
-                  aria-label="Copy invite link">
-                  <CopyIcon />
-                </Button>
-              </div>
-            </div>
-            <DottedSeparator className="py-7" />
-            <Button
-              variant={"destructive"}
-              size={"lg"}
-              type="button"
-              disabled={isLoading || isResettingInviteCode}
-              onClick={handleResetInviteLink}
-              className="ml-auto w-fit">
-              {isDeletingWorkspace ? "Reset..." : "Reset Invite Link"}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="h-full w-full border-none shadow-none">
-        <CardContent className="p-x-7">
-          <div className="flex flex-col">
             <h3 className="font-bold">Danger Zone</h3>
             <p className="text-muted-foreground text-sm">
-              Deleting a workspace is irreversible and will remove all associated data
+              Deleting a project is irreversible and will remove all associated data
             </p>
             <DottedSeparator className="py-7" />
             <Button
@@ -281,7 +224,8 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
               disabled={isLoading}
               onClick={handleDeleteWorkspace}
               className="ml-auto w-fit">
-              {isDeletingWorkspace ? "Deleting..." : "Delete Workspace"}
+              {isDeletingProject ? "Deleting..." : "Delete Project"}
+              {/* {false ? "Deleting..." : "Delete Project"} */}
             </Button>
           </div>
         </CardContent>
