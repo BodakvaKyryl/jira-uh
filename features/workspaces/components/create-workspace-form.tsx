@@ -1,17 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ImageIcon } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 import { cn } from "@/lib/utils";
 
 import { DottedSeparator } from "@/components/dotted-separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ImageUploadField } from "@/components/image-upload-field";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -24,7 +21,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { ImageUploadButton } from "../../../components/image-upload-button";
 import { useCreateWorkspace } from "../api/use-create-workspace";
 import { createWorkspaceSchema } from "../schemas";
 
@@ -35,7 +31,6 @@ interface CreateWorkspaceFormProps {
 export const CreateWorkspaceForm = ({ onCancelForm }: CreateWorkspaceFormProps) => {
   const router = useRouter();
   const { mutate, isPending } = useCreateWorkspace();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof createWorkspaceSchema>>({
     resolver: zodResolver(createWorkspaceSchema),
@@ -58,13 +53,6 @@ export const CreateWorkspaceForm = ({ onCancelForm }: CreateWorkspaceFormProps) 
         },
       }
     );
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      form.setValue("image", file);
-    }
   };
 
   return (
@@ -94,55 +82,15 @@ export const CreateWorkspaceForm = ({ onCancelForm }: CreateWorkspaceFormProps) 
                 control={form.control}
                 name="image"
                 render={({ field }) => (
-                  <div className="flex flex-col gap-y-2">
-                    <div className="flex items-center gap-x-5">
-                      {field.value ? (
-                        <div className="relative size-[72px] overflow-hidden rounded-md">
-                          <Image
-                            src={
-                              field.value instanceof File
-                                ? URL.createObjectURL(field.value)
-                                : field.value
-                            }
-                            alt={"workspace logo"}
-                            className="object-cover"
-                            fill
-                          />
-                        </div>
-                      ) : (
-                        <Avatar className="size-[72px]">
-                          <AvatarFallback>
-                            <ImageIcon className="size-[36px] text-neutral-400" />
-                          </AvatarFallback>
-                        </Avatar>
-                      )}
-                      <div className="flex flex-col">
-                        <p className="text-sm">Workspace icon</p>
-                        <p className="text-muted-foreground text-xs">
-                          JPG, PNG, SVG or JPEG, max 1MB
-                        </p>
-                        <ImageUploadButton
-                          hasImage={!!field.value}
-                          isPending={isPending}
-                          onRemoveImage={() => {
-                            field.onChange(null);
-                            if (inputRef.current) {
-                              inputRef.current.value = "";
-                            }
-                          }}
-                          onUploadClick={() => inputRef.current?.click()}
-                        />
-                      </div>
-                      <input
-                        className="hidden"
-                        type="file"
-                        accept=".jpg, .png, .svg, .jpeg"
-                        ref={inputRef}
-                        disabled={isPending}
-                        onChange={handleImageChange}
-                      />
-                    </div>
-                  </div>
+                  <FormControl>
+                    <ImageUploadField
+                      label="Workspace icon"
+                      placeholder="JPG, PNG, SVG or JPEG, max 1MB"
+                      value={field.value}
+                      onChange={field.onChange}
+                      isPending={isPending}
+                    />
+                  </FormControl>
                 )}
               />
             </div>
