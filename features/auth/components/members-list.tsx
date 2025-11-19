@@ -62,7 +62,7 @@ export const MembersList = () => {
     <Card className="h-full w-full border-none shadow-none">
       <ConfirmDialog />
       <CardHeader className="flex flex-row items-center space-y-0 gap-x-4">
-        <Button asChild size={"sm"} variant={"secondary"}>
+        <Button variant="secondary" size="sm" asChild>
           <Link href={`/workspaces/${workspaceId}`}>
             <ArrowLeftIcon className="mr-2 size-4" />
             Back
@@ -82,7 +82,7 @@ export const MembersList = () => {
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="ml-auto" variant={"secondary"} size={"icon"}>
+                  <Button variant="secondary" size="icon" className="ml-auto">
                     <MoreVerticalIcon className="text-muted-foreground size-4" />
                   </Button>
                 </DropdownMenuTrigger>

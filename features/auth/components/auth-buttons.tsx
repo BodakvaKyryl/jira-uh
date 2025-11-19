@@ -52,9 +52,9 @@ export const AuthButtons = ({
         <Button
           variant="secondary"
           size="lg"
-          className="w-full"
           disabled={disabled}
           onClick={handleGoogleLogin}
+          className="w-full"
           type="button">
           <FcGoogle className="mr-2 size-5" aria-hidden="true" />
           Login with Google
@@ -62,9 +62,9 @@ export const AuthButtons = ({
         <Button
           variant="secondary"
           size="lg"
-          className="w-full"
           disabled={disabled}
           onClick={handleGithubLogin}
+          className="w-full"
           type="button">
           <FaGithub className="mr-2 size-5" aria-hidden="true" />
           Login with GitHub

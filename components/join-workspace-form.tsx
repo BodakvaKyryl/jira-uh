@@ -47,21 +47,21 @@ export const JoinWorkspaceForm = ({ initialValues }: JoinWorkspaceFormProps) => 
       <CardContent>
         <div className="flex flex-col items-center justify-between gap-2 lg:flex-row">
           <Button
-            variant={"secondary"}
-            type="button"
-            size={"lg"}
-            asChild
+            variant="secondary"
+            size="lg"
             disabled={isPending}
-            className="w-full lg:w-fit">
+            asChild
+            className="w-full lg:w-fit"
+            type="button">
             <Link href={"/"}>Cancel</Link>
           </Button>
           <Button
-            variant={"default"}
-            type="button"
-            size={"lg"}
-            onClick={onSubmit}
+            variant="default"
+            size="lg"
             disabled={isPending}
-            className="w-full lg:w-fit">
+            onClick={onSubmit}
+            className="w-full lg:w-fit"
+            type="button">
             Join Workspace
           </Button>
         </div>

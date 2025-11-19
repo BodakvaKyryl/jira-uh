@@ -18,12 +18,12 @@ export const ImageUploadButton = ({
   if (hasImage) {
     return (
       <Button
-        className="mt-2 w-fit"
-        type="button"
-        disabled={isPending}
-        variant={"destructive"}
+        variant="destructive"
         size="sx"
-        onClick={onRemoveImage}>
+        disabled={isPending}
+        onClick={onRemoveImage}
+        className="mt-2 w-fit"
+        type="button">
         Remove Image
       </Button>
     );
@@ -31,12 +31,12 @@ export const ImageUploadButton = ({
 
   return (
     <Button
-      className="mt-2 w-fit"
-      type="button"
-      disabled={isPending}
-      variant={"teritary"}
+      variant="teritary"
       size="sx"
-      onClick={onUploadClick}>
+      disabled={isPending}
+      onClick={onUploadClick}
+      className="mt-2 w-fit"
+      type="button">
       Upload Image
     </Button>
   );

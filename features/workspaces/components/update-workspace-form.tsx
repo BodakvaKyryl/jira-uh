@@ -125,8 +125,8 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
         <CardHeader className="flex justify-between px-7">
           <CardTitle className="text-xl font-bold">{initialValues.name}</CardTitle>
           <Button
-            size={"sm"}
-            variant={"secondary"}
+            variant="secondary"
+            size="sm"
             disabled={isLoading}
             onClick={
               onCancelForm ? onCancelForm : () => router.push(`/workspaces/${initialValues.$id}`)
@@ -217,15 +217,15 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
               <DottedSeparator className="py-7" />
               <div className="flex items-center justify-between">
                 <Button
-                  type="button"
-                  size={"lg"}
-                  variant={"secondary"}
-                  onClick={onCancelForm}
+                  variant="secondary"
+                  size="lg"
                   disabled={isLoading}
-                  className={cn(!onCancelForm && "invisible")}>
+                  onClick={onCancelForm}
+                  className={cn(!onCancelForm && "invisible")}
+                  type="button">
                   Cancel
                 </Button>
-                <Button disabled={isLoading} size={"lg"}>
+                <Button size="lg" disabled={isLoading}>
                   Update Workspace
                 </Button>
               </div>
@@ -244,10 +244,10 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
               <div className="flex w-full items-center gap-x-2">
                 <Input readOnly value={fullInviteLink} aria-label="Invite link" />
                 <Button
-                  onClick={handleCopyInviteLink}
-                  variant={"secondary"}
-                  size={"lg"}
+                  variant="secondary"
+                  size="lg"
                   disabled={isLoading}
+                  onClick={handleCopyInviteLink}
                   aria-label="Copy invite link">
                   <CopyIcon />
                 </Button>
@@ -255,12 +255,12 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
             </div>
             <DottedSeparator className="py-7" />
             <Button
-              variant={"destructive"}
-              size={"lg"}
-              type="button"
+              variant="destructive"
+              size="lg"
               disabled={isLoading || isResettingInviteCode}
               onClick={handleResetInviteLink}
-              className="ml-auto w-fit">
+              className="ml-auto w-fit"
+              type="button">
               {isDeletingWorkspace ? "Reset..." : "Reset Invite Link"}
             </Button>
           </div>
@@ -275,12 +275,12 @@ export const UpdateWorkspaceForm = ({ onCancelForm, initialValues }: UpdateWorks
             </p>
             <DottedSeparator className="py-7" />
             <Button
-              variant={"destructive"}
-              size={"lg"}
-              type="button"
+              variant="destructive"
+              size="lg"
               disabled={isLoading}
               onClick={handleDeleteWorkspace}
-              className="ml-auto w-fit">
+              className="ml-auto w-fit"
+              type="button">
               {isDeletingWorkspace ? "Deleting..." : "Delete Workspace"}
             </Button>
           </div>

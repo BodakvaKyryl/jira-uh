@@ -20,7 +20,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
       <div className="mx-auto max-w-screen-2xl p-4">
         <nav className="flex items-center justify-between gap-2">
           <Image src="/logo.svg" width={164} height={48} alt="logo" />
-          <Button asChild variant="secondary" size="default">
+          <Button variant="secondary" size="default" asChild>
             <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
               {pathName === "/sign-in" ? "Sign Up" : "Login"}
             </Link>

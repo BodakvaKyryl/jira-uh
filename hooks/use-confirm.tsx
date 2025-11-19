@@ -42,10 +42,10 @@ export const useConfirm = (
             <CardDescription>{message}</CardDescription>
           </CardHeader>
           <div className="flex w-full flex-col items-center justify-end gap-x-2 gap-y-2 pt-4 lg:flex-row">
-            <Button onClick={handleCancel} variant="outline" className="w-full lg:w-auto">
+            <Button variant="outline" onClick={handleCancel} className="w-full lg:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleConfirm} variant={variant} className="w-full lg:w-auto">
+            <Button variant={variant} onClick={handleConfirm} className="w-full lg:w-auto">
               Confirm
             </Button>
           </div>

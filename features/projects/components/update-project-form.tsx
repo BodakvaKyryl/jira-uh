@@ -96,8 +96,8 @@ export const UpdateProjectForm = ({ onCancelForm, initialValues }: UpdateProject
         <CardHeader className="flex justify-between px-7">
           <CardTitle className="text-xl font-bold">{initialValues.name}</CardTitle>
           <Button
-            size={"sm"}
-            variant={"secondary"}
+            variant="secondary"
+            size="sm"
             disabled={isLoading}
             onClick={
               onCancelForm
@@ -193,15 +193,15 @@ export const UpdateProjectForm = ({ onCancelForm, initialValues }: UpdateProject
               <DottedSeparator className="py-7" />
               <div className="flex items-center justify-between">
                 <Button
-                  type="button"
-                  size={"lg"}
-                  variant={"secondary"}
-                  onClick={onCancelForm}
+                  variant="secondary"
+                  size="lg"
                   disabled={isLoading}
-                  className={cn(!onCancelForm && "invisible")}>
+                  onClick={onCancelForm}
+                  className={cn(!onCancelForm && "invisible")}
+                  type="button">
                   Cancel
                 </Button>
-                <Button disabled={isLoading} size={"lg"}>
+                <Button size="lg" disabled={isLoading}>
                   Update Project
                 </Button>
               </div>
@@ -218,14 +218,13 @@ export const UpdateProjectForm = ({ onCancelForm, initialValues }: UpdateProject
             </p>
             <DottedSeparator className="py-7" />
             <Button
-              variant={"destructive"}
-              size={"lg"}
-              type="button"
+              variant="destructive"
+              size="lg"
               disabled={isLoading}
               onClick={handleDeleteWorkspace}
-              className="ml-auto w-fit">
+              className="ml-auto w-fit"
+              type="button">
               {isDeletingProject ? "Deleting..." : "Delete Project"}
-              {/* {false ? "Deleting..." : "Delete Project"} */}
             </Button>
           </div>
         </CardContent>
