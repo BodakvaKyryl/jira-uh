@@ -107,7 +107,8 @@ const app = new Hono<MiddlewareContext>()
         const databases = c.get("databases");
         const user = c.get("user");
 
-        const { name, status, workspaceId, projectId, dueDate, assigneeId } = c.req.valid("form");
+        const { name, status, workspaceId, projectId, dueDate, assigneeId, description } =
+          c.req.valid("form");
 
         const member = await getMember({ databases, workspaceId, userId: user.$id });
 
@@ -137,6 +138,7 @@ const app = new Hono<MiddlewareContext>()
           dueDate,
           assigneeId,
           position: newPosition,
+          ...(description && { description }),
         });
 
         return c.json({ data: task }, 201);
