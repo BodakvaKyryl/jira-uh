@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<(typeof client.api.tasks)["$post"], 200>;
+type ResponseType = InferResponseType<(typeof client.api.tasks)["$post"], 201>;
 type RequestType = InferRequestType<(typeof client.api.tasks)["$post"]>;
 
 export const useCreateTask = () => {
