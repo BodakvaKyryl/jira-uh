@@ -7,9 +7,9 @@ import { JoinWorkspaceForm } from "@/components/join-workspace-form";
 import { getWorkspaceInfo } from "@/features/workspaces/queries";
 
 interface WorkspaceIdJoinPageProps {
-  params: {
+  params: Promise<{
     workspaceId: string;
-  };
+  }>;
 }
 
 const WorkspaceIdJoinPage = async ({ params }: WorkspaceIdJoinPageProps) => {

@@ -67,15 +67,19 @@ export const CreateTaskForm = ({
   });
 
   const onSubmitForm = (values: FormValues) => {
+    if (!workspaceId) {
+      console.error("Workspace ID is required");
+      return;
+    }
+
     const finalValues = {
       ...values,
       workspaceId,
-      dueDate: values.dueDate instanceof Date ? values.dueDate.toISOString() : values.dueDate,
       description: values.description || undefined,
     };
 
     mutate(
-      { form: finalValues },
+      { json: finalValues },
       {
         onSuccess: () => {
           form.reset();

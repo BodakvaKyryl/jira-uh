@@ -4,9 +4,9 @@ import { UpdateProjectForm } from "@/features/projects/components/update-project
 import { getProject } from "@/features/projects/queries";
 
 interface ProjectIdSettingsPageProps {
-  params: {
+  params: Promise<{
     projectId: string;
-  };
+  }>;
 }
 
 const ProjectIdSettingsPage = async ({ params }: ProjectIdSettingsPageProps) => {

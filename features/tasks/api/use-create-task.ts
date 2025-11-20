@@ -4,15 +4,15 @@ import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<(typeof client.api.tasks)["$post"], 200>;
+type ResponseType = InferResponseType<(typeof client.api.tasks)["$post"], 201>;
 type RequestType = InferRequestType<(typeof client.api.tasks)["$post"]>;
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ form }: RequestType) => {
-      const response = await client.api.tasks["$post"]({ form });
+    mutationFn: async ({ json }: RequestType) => {
+      const response = await client.api.tasks["$post"]({ json });
 
       if (!response.ok) {
         throw new Error("Failed to create task");

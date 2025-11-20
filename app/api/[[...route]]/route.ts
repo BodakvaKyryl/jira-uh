@@ -16,6 +16,7 @@ app.onError((err, c) => {
   return c.json({ error: "Internal Server Error" }, 500);
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app
   .route("/auth", auth)
   .route("/workspaces", workspaces)

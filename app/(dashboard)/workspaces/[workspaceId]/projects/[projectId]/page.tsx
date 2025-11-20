@@ -10,9 +10,9 @@ import { getProject } from "@/features/projects/queries";
 import { TaskViewSwitcher } from "@/features/tasks/components/task-view-switcher";
 
 interface ProjectIdPageProps {
-  params: {
+  params: Promise<{
     projectId: string;
-  };
+  }>;
 }
 
 const ProjectIdPage = async ({ params }: ProjectIdPageProps) => {

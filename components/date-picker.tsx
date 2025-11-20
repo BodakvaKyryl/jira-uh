@@ -28,9 +28,9 @@ export const DatePicker = ({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          size="lg"
+          size="default"
           className={cn(
-            "w-full justify-start px-3 text-left font-normal",
+            "w-full justify-start truncate px-3 text-left font-normal",
             !value && "text-muted-foreground",
             className
           )}>
@@ -38,14 +38,14 @@ export const DatePicker = ({
           {value ? (
             format(value, "PPP")
           ) : (
-            <span className={cn("text-muted-foreground", className)}>{placeholder}</span>
+            <span className={"text-muted-foreground truncate"}>{placeholder}</span>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          captionLayout="dropdown-months"
+          captionLayout="dropdown"
           selected={value ?? undefined}
           onSelect={(date) => onChange(date as Date)}
         />

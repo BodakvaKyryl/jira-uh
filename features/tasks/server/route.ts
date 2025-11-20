@@ -101,14 +101,14 @@ const app = new Hono<MiddlewareContext>()
   .post(
     "/",
     sessionMiddleware,
-    validator("form", (value) => createTaskSchema.parse(value)),
+    validator("json", (value) => createTaskSchema.parse(value)),
     async (c) => {
       try {
         const databases = c.get("databases");
         const user = c.get("user");
 
         const { name, status, workspaceId, projectId, dueDate, assigneeId, description } =
-          c.req.valid("form");
+          c.req.valid("json");
 
         const member = await getMember({ databases, workspaceId, userId: user.$id });
 
