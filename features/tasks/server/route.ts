@@ -12,7 +12,7 @@ import { Member } from "@/features/members/types";
 import { getMember } from "@/features/members/utils";
 import { Project } from "@/features/projects/types";
 import { createTaskSchema } from "@/features/tasks/schemas";
-import { TaskStatus } from "@/features/tasks/types";
+import { Task, TaskStatus } from "@/features/tasks/types";
 
 const app = new Hono<MiddlewareContext>()
   .get(
@@ -52,7 +52,7 @@ const app = new Hono<MiddlewareContext>()
         ...(dueDate ? [Query.equal("dueDate", dueDate)] : []),
       ];
 
-      const tasks = await databases.listDocuments(DATABASE_ID, TASKS_ID, query);
+      const tasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, query);
 
       const projectIds = [
         ...new Set(tasks.documents.map((task) => task.projectId).filter(Boolean)),

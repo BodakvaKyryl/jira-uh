@@ -13,3 +13,11 @@ export function generateInviteCodeWorkspace(length: number) {
   }
   return result;
 }
+
+export function snakeCaseToTitleCase(str: string) {
+  return str
+    .toLowerCase()
+    .replace(/_+/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
+}

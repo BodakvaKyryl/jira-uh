@@ -183,7 +183,7 @@ export const CreateTaskForm = ({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value={TaskStatus.BACKLOG}>Backlog</SelectItem>
-                          <SelectItem value={TaskStatus.TO_DO}>ToDo</SelectItem>
+                          <SelectItem value={TaskStatus.TO_DO}>Todo</SelectItem>
                           <SelectItem value={TaskStatus.IN_PROGRESS}>In Progress</SelectItem>
                           <SelectItem value={TaskStatus.IN_REVIEW}>In Review</SelectItem>
                           <SelectItem value={TaskStatus.DONE}>Done</SelectItem>
