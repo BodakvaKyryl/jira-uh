@@ -98,6 +98,40 @@ const app = new Hono<MiddlewareContext>()
       return c.json({ data: { ...tasks, documents: populatedTasks } }, 200);
     }
   )
+  .get("/:taskId", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const currentUser = c.get("user");
+
+    const { users } = await createAdminClient();
+
+    const { taskId } = c.req.param();
+
+    const task = await databases.getDocument<Task>(DATABASE_ID, TASKS_ID, taskId);
+
+    const currentMember = await getMember({
+      databases,
+      workspaceId: task.workspaceId,
+      userId: currentUser.$id,
+    });
+
+    if (!currentMember) return c.json({ error: "Unauthorized" }, 401);
+
+    const project = await databases.getDocument<Project>(DATABASE_ID, PROJECTS_ID, task.projectId);
+
+    const member = await databases.getDocument<Member>(DATABASE_ID, MEMBERS_ID, task.assigneeId);
+
+    const user = await users.get(member.userId);
+
+    const assignee = { ...member, name: user.name, email: user.email };
+
+    return c.json({
+      data: {
+        ...task,
+        project,
+        assignee,
+      },
+    });
+  })
   .post(
     "/",
     sessionMiddleware,
@@ -147,6 +181,64 @@ const app = new Hono<MiddlewareContext>()
         return c.json({ error: "Failed to create task", details: String(error) }, 500);
       }
     }
-  );
+  )
+  .patch(
+    "/:taskId",
+    sessionMiddleware,
+    validator("json", (value) => createTaskSchema.partial().parse(value)),
+    async (c) => {
+      try {
+        const databases = c.get("databases");
+        const user = c.get("user");
+
+        const { name, status, projectId, dueDate, assigneeId, description } = c.req.valid("json");
+
+        const taskId = c.req.param("taskId");
+
+        const existingTask = await databases.getDocument<Task>(DATABASE_ID, TASKS_ID, taskId);
+
+        const member = await getMember({
+          databases,
+          workspaceId: existingTask.workspaceId,
+          userId: user.$id,
+        });
+
+        if (!member) {
+          return c.json({ error: "Unauthorized" }, 401);
+        }
+
+        const task = await databases.updateDocument(DATABASE_ID, TASKS_ID, taskId, {
+          name,
+          status,
+          projectId,
+          dueDate,
+          assigneeId,
+          ...(description && { description }),
+        });
+
+        return c.json({ data: task }, 200);
+      } catch (error) {
+        console.error("Error creating task:", error);
+        return c.json({ error: "Failed to create task", details: String(error) }, 500);
+      }
+    }
+  )
+  .delete("/:taskId", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const user = c.get("user");
+    const { taskId } = c.req.param();
+
+    const task = await databases.getDocument<Task>(DATABASE_ID, TASKS_ID, taskId);
+
+    const member = await getMember({ databases, workspaceId: task.workspaceId, userId: user.$id });
+
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    await databases.deleteDocument(DATABASE_ID, TASKS_ID, taskId);
+
+    return c.json({ data: { $id: task.id } });
+  });
 
 export default app;
