@@ -34,7 +34,7 @@ export const DatePicker = ({
             !value && "text-muted-foreground",
             className
           )}>
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <CalendarIcon className="mr-2 size-4" />
           {value ? (
             format(value, "PPP")
           ) : (

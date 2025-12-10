@@ -145,7 +145,7 @@ const app = new Hono<MiddlewareContext>()
     "/:memberId",
     sessionMiddleware,
     validator("json", (value) => {
-      return z.object({ role: z.nativeEnum(MemberRole) }).parse(value);
+      return z.object({ role: z.enum(MemberRole) }).parse(value);
     }),
     async (c) => {
       try {

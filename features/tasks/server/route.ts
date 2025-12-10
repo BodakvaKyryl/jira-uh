@@ -24,7 +24,7 @@ const app = new Hono<MiddlewareContext>()
           workspaceId: z.string(),
           projectId: z.string().nullish(),
           assigneeId: z.string().nullish(),
-          status: z.nativeEnum(TaskStatus).nullish(),
+          status: z.enum(TaskStatus).nullish(),
           search: z.string().nullish(),
           dueDate: z.string().nullish(),
         })
@@ -238,7 +238,64 @@ const app = new Hono<MiddlewareContext>()
 
     await databases.deleteDocument(DATABASE_ID, TASKS_ID, taskId);
 
-    return c.json({ data: { $id: task.id } });
-  });
+    return c.json({ data: { $id: task.$id } });
+  })
+  .post(
+    "/bulk-update",
+    sessionMiddleware,
+    validator("json", (value) =>
+      z
+        .object({
+          tasks: z.array(
+            z.object({
+              $id: z.string(),
+              status: z.enum(TaskStatus),
+              position: z.number().int().positive().min(1000).max(1_000_000),
+            })
+          ),
+        })
+        .parse(value)
+    ),
+    async (c) => {
+      const databases = c.get("databases");
+      const user = c.get("user");
+
+      const { tasks } = c.req.valid("json");
+
+      const tasksToUpdate = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.contains(
+          "$id",
+          tasks.map((task) => task.$id)
+        ),
+      ]);
+
+      const workspaceIds = new Set(tasksToUpdate.documents.map((task) => task.workspaceId));
+
+      if (workspaceIds.size !== 1) {
+        return c.json({ error: "All tasks must belong to the same workspace" }, 400);
+      }
+
+      const workspaceId = workspaceIds.values().next().value;
+
+      if (!workspaceId) {
+        return c.json({ error: "Workspace ID not found" }, 400);
+      }
+
+      const member = await getMember({ databases, workspaceId, userId: user.$id });
+
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const updatedTasks = await Promise.all(
+        tasks.map(async (task) => {
+          const { $id, status, position } = task;
+          return databases.updateDocument<Task>(DATABASE_ID, TASKS_ID, $id, { status, position });
+        })
+      );
+
+      return c.json({ data: updatedTasks });
+    }
+  );
 
 export default app;
