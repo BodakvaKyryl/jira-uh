@@ -20,11 +20,11 @@ interface KanbanColumnHeaderProps {
 }
 
 const statusIconsMap: Record<TaskStatus, React.ReactNode> = {
-  [TaskStatus.BACKLOG]: <CircleDashedIcon className="size=[18px] text-purple-800" />,
-  [TaskStatus.TO_DO]: <CircleIcon className="size=[18px] text-rose-800" />,
-  [TaskStatus.IN_PROGRESS]: <CircleDotDashedIcon className="size=[18px] text-amber-800" />,
-  [TaskStatus.IN_REVIEW]: <CircleDotIcon className="size=[18px] text-sky-800" />,
-  [TaskStatus.DONE]: <CircleCheckIcon className="size=[18px] text-emerald-800" />,
+  [TaskStatus.BACKLOG]: <CircleDashedIcon className="size=[18px] text-purple-500" />,
+  [TaskStatus.TO_DO]: <CircleIcon className="size=[18px] text-rose-500" />,
+  [TaskStatus.IN_PROGRESS]: <CircleDotDashedIcon className="size=[18px] text-amber-500" />,
+  [TaskStatus.IN_REVIEW]: <CircleDotIcon className="size=[18px] text-sky-500" />,
+  [TaskStatus.DONE]: <CircleCheckIcon className="size=[18px] text-emerald-500" />,
 };
 
 export const KanbanColumnHeader = ({ board, taskCount }: KanbanColumnHeaderProps) => {
