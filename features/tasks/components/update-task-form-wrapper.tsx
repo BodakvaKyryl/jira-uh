@@ -48,7 +48,7 @@ export const UpdateTaskFormWrapper = ({ onCancel, id }: UpdateTaskFormWrapperPro
 
   return (
     <UpdateTaskForm
-      onCancelFormAction={onCancel}
+      onCancelForm={onCancel}
       projectOptions={projectOptions ?? []}
       memberOptions={memberOptions ?? []}
       initialValues={initialValues}

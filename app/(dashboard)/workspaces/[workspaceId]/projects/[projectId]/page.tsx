@@ -43,7 +43,7 @@ const ProjectIdPage = async ({ params }: ProjectIdPageProps) => {
           </Link>
         </Button>
       </div>
-      <TaskViewSwitcher />
+      <TaskViewSwitcher hideProjectFilter />
     </div>
   );
 };

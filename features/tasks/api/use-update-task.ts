@@ -13,14 +13,29 @@ export const useUpdateTask = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ json, param }: RequestType) => {
-      const response = await client.api.tasks[":taskId"]["$patch"]({ json, param });
+    mutationFn: async (payload: RequestType) => {
+      const hasJson = (payload as any).json !== undefined;
+      const hasForm = (payload as any).form !== undefined;
 
-      if (!response.ok) {
-        throw new Error("Failed to update task");
+      if (!hasJson && !hasForm) {
+        throw new Error("Failed to update task: missing payload (provide either json or form)");
       }
 
-      return (await response.json()) as ResponseType;
+      const opts: any = {};
+      if ((payload as any).param) opts.param = (payload as any).param;
+      if (hasJson) opts.json = (payload as any).json;
+      if (hasForm) opts.form = (payload as any).form;
+
+      const response = await client.api.tasks[":taskId"]["$patch"](opts);
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => "");
+        throw new Error(`Failed to update task${text ? `: ${text}` : ""}`);
+      }
+
+      const data = (await response.json()) as ResponseType;
+
+      return data;
     },
     onSuccess: ({ data }) => {
       toast.success("Task updated!");

@@ -191,7 +191,8 @@ const app = new Hono<MiddlewareContext>()
         const databases = c.get("databases");
         const user = c.get("user");
 
-        const { name, status, projectId, dueDate, assigneeId, description } = c.req.valid("json");
+        const payload = c.req.valid("json");
+        const { name, status, projectId, dueDate, assigneeId, description } = payload;
 
         const taskId = c.req.param("taskId");
 
@@ -207,19 +208,35 @@ const app = new Hono<MiddlewareContext>()
           return c.json({ error: "Unauthorized" }, 401);
         }
 
-        const task = await databases.updateDocument(DATABASE_ID, TASKS_ID, taskId, {
-          name,
-          status,
-          projectId,
-          dueDate,
-          assigneeId,
-          ...(description && { description }),
-        });
+        // Build update object including only fields that were provided in the request.
+        // Important: include description even if it's an empty string (to allow clearing).
+        const updatePayload: Record<string, unknown> = {};
+        if (typeof name !== "undefined") updatePayload.name = name;
+        if (typeof status !== "undefined") updatePayload.status = status;
+        if (typeof projectId !== "undefined") updatePayload.projectId = projectId;
+        if (typeof dueDate !== "undefined") updatePayload.dueDate = dueDate;
+        if (typeof assigneeId !== "undefined") updatePayload.assigneeId = assigneeId;
+        if (typeof description !== "undefined") updatePayload.description = description;
 
-        return c.json({ data: task }, 200);
+        if (Object.keys(updatePayload).length === 0) {
+          return c.json({ error: "No fields provided to update" }, 400);
+        }
+
+        try {
+          const task = await databases.updateDocument(DATABASE_ID, TASKS_ID, taskId, updatePayload);
+          return c.json({ data: task }, 200);
+        } catch (appwriteError) {
+          return c.json(
+            {
+              error: "Failed to update task (Appwrite error).",
+              details: String(appwriteError),
+            },
+            500
+          );
+        }
       } catch (error) {
-        console.error("Error creating task:", error);
-        return c.json({ error: "Failed to create task", details: String(error) }, 500);
+        console.error("Error updating task:", error);
+        return c.json({ error: "Failed to update task", details: String(error) }, 500);
       }
     }
   )
