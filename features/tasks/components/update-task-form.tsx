@@ -74,7 +74,7 @@ export const UpdateTaskForm = ({
     const finalValues = {
       ...values,
       workspaceId,
-      description: values.description,
+      description: values.description || undefined,
     };
 
     mutate(

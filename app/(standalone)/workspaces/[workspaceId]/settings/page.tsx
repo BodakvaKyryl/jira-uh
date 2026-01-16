@@ -1,25 +1,11 @@
 import { requireAuth } from "@/lib/auth-utils";
 
-import { UpdateWorkspaceForm } from "@/features/workspaces/components/update-workspace-form";
-import { getWorkspace } from "@/features/workspaces/queries";
+import { WorkspaceIdSettingsClient } from "./client";
 
-interface WorkspaceIdSettingsPageProps {
-  params: Promise<{
-    workspaceId: string;
-  }>;
-}
-
-const WorkspaceIdSettingsPage = async ({ params }: WorkspaceIdSettingsPageProps) => {
+const WorkspaceIdSettingsPage = async () => {
   await requireAuth();
 
-  const { workspaceId } = await params;
-  const initialValues = await getWorkspace({ workspaceId });
-
-  return (
-    <div className="w-full lg:max-w-xl">
-      <UpdateWorkspaceForm initialValues={initialValues} />
-    </div>
-  );
+  return <WorkspaceIdSettingsClient />;
 };
 
 export default WorkspaceIdSettingsPage;

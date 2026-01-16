@@ -39,6 +39,48 @@ const app = new Hono<MiddlewareContext>()
 
     return c.json({ data: workspaces });
   })
+  .get("/:workspaceId", sessionMiddleware, async (c) => {
+    try {
+      const user = c.get("user");
+      const databases = c.get("databases");
+
+      const { workspaceId } = c.req.param();
+
+      const member = await getMember({ databases, workspaceId, userId: user.$id });
+
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+      const workspace = await databases.getDocument<Workspace>(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        workspaceId
+      );
+      return c.json({ data: workspace });
+    } catch (error) {
+      console.error("Error get workspace:", error);
+      return c.json({ error: "Failed to get workspace", details: String(error) }, 500);
+    }
+  })
+  .get("/:workspaceId/info", sessionMiddleware, async (c) => {
+    try {
+      const databases = c.get("databases");
+
+      const { workspaceId } = c.req.param();
+
+      const workspace = await databases.getDocument<Workspace>(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        workspaceId
+      );
+      return c.json({
+        data: { $id: workspace.$id, name: workspace.name, image: workspace.imageUrl },
+      });
+    } catch (error) {
+      console.error("Error get workspace info:", error);
+      return c.json({ error: "Failed to get workspace info", details: String(error) }, 500);
+    }
+  })
   .post(
     "/",
     validator("form", (value) => createWorkspaceSchema.parse(value)),

@@ -1,26 +1,11 @@
 import { requireAuth } from "@/lib/auth-utils";
 
-import { UpdateProjectForm } from "@/features/projects/components/update-project-form";
-import { getProject } from "@/features/projects/queries";
+import { ProjectIdSettingsClient } from "./client";
 
-interface ProjectIdSettingsPageProps {
-  params: Promise<{
-    projectId: string;
-  }>;
-}
-
-const ProjectIdSettingsPage = async ({ params }: ProjectIdSettingsPageProps) => {
+const ProjectIdSettingsPage = async () => {
   await requireAuth();
 
-  const { projectId } = await params;
-
-  const initialValues = await getProject({ projectId });
-
-  return (
-    <div className="w-full lg:max-w-xl">
-      <UpdateProjectForm initialValues={initialValues} />
-    </div>
-  );
+  return <ProjectIdSettingsClient />;
 };
 
 export default ProjectIdSettingsPage;

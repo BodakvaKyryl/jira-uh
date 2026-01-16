@@ -88,6 +88,35 @@ const app = new Hono<MiddlewareContext>()
       return c.json({ data: projects.documents }, 200);
     }
   )
+  .get("/:projectId", sessionMiddleware, async (c) => {
+    try {
+      const databases = c.get("databases");
+      const user = c.get("user");
+
+      const { projectId } = c.req.param();
+
+      const project = await databases.getDocument<Project>(DATABASE_ID, PROJECTS_ID, projectId);
+
+      if (!project) {
+        return c.json({ error: "Project not found" }, 404);
+      }
+
+      const member = await getMember({
+        databases,
+        workspaceId: project.workspaceId,
+        userId: user.$id,
+      });
+
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      return c.json({ data: project }, 200);
+    } catch (error) {
+      console.error("Error get project:", error);
+      return c.json({ error: "Failed to get project", details: String(error) }, 500);
+    }
+  })
   .patch(
     "/:projectId",
     sessionMiddleware,
