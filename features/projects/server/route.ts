@@ -1,9 +1,10 @@
+import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { ID, Query } from "node-appwrite";
 import { z } from "zod";
 
-import { DATABASE_ID, PROJECTS_ID } from "@/config";
+import { DATABASE_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 
 import { uploadImageAndGetBase64 } from "@/lib/appwrite";
 import { MiddlewareContext, sessionMiddleware } from "@/lib/session-middleware";
@@ -11,6 +12,7 @@ import { MiddlewareContext, sessionMiddleware } from "@/lib/session-middleware";
 import { getMember } from "@/features/members/utils";
 import { createProjectSchema, updateProjectSchema } from "@/features/projects/schemas";
 import { Project } from "@/features/projects/types";
+import { Task, TaskStatus } from "@/features/tasks/types";
 
 const app = new Hono<MiddlewareContext>()
   .post(
@@ -151,9 +153,11 @@ const app = new Hono<MiddlewareContext>()
         if (image instanceof File) {
           try {
             newImageUrl = await uploadImageAndGetBase64(storage, image);
-          } catch (uploadError: any) {
+          } catch (uploadError) {
             console.error("Error uploading image for workspace update:", uploadError);
-            return c.json({ error: uploadError.message || "Failed to upload image" }, 400);
+            const message =
+              uploadError instanceof Error ? uploadError.message : String(uploadError);
+            return c.json({ error: message || "Failed to upload image" }, 400);
           }
         } else if (typeof image === "string") {
           newImageUrl = image === "" ? null : image;
@@ -211,6 +215,134 @@ const app = new Hono<MiddlewareContext>()
     } catch (error) {
       console.error("Error deleting project:", error);
       return c.json({ error: "Failed to delete project", details: String(error) }, 500);
+    }
+  })
+  .get("/:projectId/analytics", sessionMiddleware, async (c) => {
+    try {
+      const databases = c.get("databases");
+      const user = c.get("user");
+      const { projectId } = c.req.param();
+
+      const project = await databases.getDocument<Project>(DATABASE_ID, PROJECTS_ID, projectId);
+
+      const member = await getMember({
+        databases,
+        workspaceId: project.workspaceId,
+        userId: user.$id,
+      });
+
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const now = new Date();
+      const thisMonthStart = startOfMonth(now);
+      const thisMonthEnd = endOfMonth(now);
+      const lastMonthStart = startOfMonth(subMonths(now, 1));
+      const lastMonthEnd = endOfMonth(subMonths(now, 1));
+
+      const thisMonthTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.greaterThan("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThan("$createdAt", thisMonthEnd.toISOString()),
+      ]);
+
+      const lastMonthTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.greaterThan("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThan("$createdAt", lastMonthEnd.toISOString()),
+      ]);
+
+      const taskCount = thisMonthTasks.total;
+      const taskDifference = taskCount - lastMonthTasks.total;
+
+      const thisMonthAssignedTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.equal("assigneeId", member.$id),
+        Query.greaterThan("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThan("$createdAt", thisMonthEnd.toISOString()),
+      ]);
+
+      const lastMonthAssignedTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.equal("assigneeId", member.$id),
+        Query.greaterThan("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThan("$createdAt", lastMonthEnd.toISOString()),
+      ]);
+
+      const assignedTaskCount = thisMonthAssignedTasks.total;
+      const assignedTaskDifference = assignedTaskCount - lastMonthAssignedTasks.total;
+
+      const thisMonthIncompletedTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.notEqual("status", TaskStatus.DONE),
+        Query.greaterThan("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThan("$createdAt", thisMonthEnd.toISOString()),
+      ]);
+
+      const lastMonthIncompletedTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.notEqual("status", TaskStatus.DONE),
+        Query.greaterThan("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThan("$createdAt", lastMonthEnd.toISOString()),
+      ]);
+
+      const incompletedTaskCount = thisMonthIncompletedTasks.total;
+      const incompletedTaskDifference = incompletedTaskCount - lastMonthIncompletedTasks.total;
+
+      const thisMonthCompletedTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.equal("status", TaskStatus.DONE),
+        Query.greaterThan("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThan("$createdAt", thisMonthEnd.toISOString()),
+      ]);
+
+      const lastMonthCompletedTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.equal("status", TaskStatus.DONE),
+        Query.greaterThan("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThan("$createdAt", lastMonthEnd.toISOString()),
+      ]);
+
+      const completedTaskCount = thisMonthCompletedTasks.total;
+      const completedTaskDifference = completedTaskCount - lastMonthCompletedTasks.total;
+
+      const thisMonthOverdueTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.notEqual("status", TaskStatus.DONE),
+        Query.lessThan("dueDate", now.toISOString()),
+        Query.greaterThan("$createdAt", thisMonthStart.toISOString()),
+        Query.lessThan("$createdAt", thisMonthEnd.toISOString()),
+      ]);
+
+      const lastMonthOverdueTasks = await databases.listDocuments<Task>(DATABASE_ID, TASKS_ID, [
+        Query.equal("projectId", projectId),
+        Query.notEqual("status", TaskStatus.DONE),
+        Query.lessThan("dueDate", now.toISOString()),
+        Query.greaterThan("$createdAt", lastMonthStart.toISOString()),
+        Query.lessThan("$createdAt", lastMonthEnd.toISOString()),
+      ]);
+
+      const overdueTaskCount = thisMonthOverdueTasks.total;
+      const overdueTaskDifference = overdueTaskCount - lastMonthOverdueTasks.total;
+
+      return c.json({
+        data: {
+          taskCount,
+          taskDifference,
+          assignedTaskCount,
+          assignedTaskDifference,
+          completedTaskCount,
+          completedTaskDifference,
+          incompletedTaskCount,
+          incompletedTaskDifference,
+          overdueTaskCount,
+          overdueTaskDifference,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching analytics:", error);
+      return c.json({ error: "Failed to fetch analytics", details: String(error) }, 500);
     }
   });
 
