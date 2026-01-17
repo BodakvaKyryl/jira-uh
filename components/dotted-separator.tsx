@@ -33,8 +33,9 @@ export const DottedSeparator = ({
         : color;
 
     return {
-      width: isHorizontal ? "100%" : height,
+      width: isHorizontal ? "100%" : height || "1px",
       height: isHorizontal ? height : "100%",
+      minHeight: isHorizontal ? undefined : "100%",
       backgroundImage: `radial-gradient(circle, ${separatorColor} 1px, transparent 1px)`,
       backgroundSize: isHorizontal ? `${totalSize}px ${height}` : `${height} ${totalSize}px`,
       backgroundRepeat: isHorizontal ? "repeat-x" : "repeat-y",
@@ -43,11 +44,11 @@ export const DottedSeparator = ({
   }, [color, height, gapSize, dotSize, isHorizontal]);
 
   const containerClasses = cn(
-    isHorizontal ? "flex w-full items-center" : "flex h-full flex-col items-center",
+    isHorizontal ? "flex w-full items-center" : "flex items-center self-stretch",
     className
   );
 
-  const separatorClasses = isHorizontal ? "flex-grow" : "flex-grow-0";
+  const separatorClasses = isHorizontal ? "flex-grow" : "self-stretch";
 
   return (
     <div className={containerClasses}>

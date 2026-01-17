@@ -108,7 +108,7 @@ export const MembersList = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            {index < data.documents.length - 1 && <Separator className="my-2.5" />}
+            {index < data.documents.length - 1 && <Separator className="my-2.5 scale-y-50" />}
           </Fragment>
         ))}
       </CardContent>
