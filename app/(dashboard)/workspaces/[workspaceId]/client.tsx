@@ -3,6 +3,7 @@
 import { Analytics } from "@/components/analytics";
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
+import { MemberList } from "@/components/workspace-analytics/member-list";
 import { ProjectList } from "@/components/workspace-analytics/project-list";
 import { TaskList } from "@/components/workspace-analytics/task-list";
 
@@ -36,6 +37,7 @@ export const WorkspaceIdClient = () => {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <TaskList data={tasks?.documents || []} total={tasks?.total || 0} />
         <ProjectList data={projects?.documents || []} total={projects?.total || 0} />
+        <MemberList data={members?.documents || []} total={members?.total || 0} />
       </div>
     </div>
   );

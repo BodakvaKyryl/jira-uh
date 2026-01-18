@@ -8,7 +8,7 @@ import { DATABASE_ID, MEMBERS_ID } from "@/config";
 import { createAdminClient } from "@/lib/appwrite";
 import { MiddlewareContext, sessionMiddleware } from "@/lib/session-middleware";
 
-import { MemberRole } from "../types";
+import { Member, MemberRole } from "../types";
 import { getMember } from "../utils";
 
 const app = new Hono<MiddlewareContext>()
@@ -35,7 +35,7 @@ const app = new Hono<MiddlewareContext>()
           return c.json({ error: "Unauthorized" }, 401);
         }
 
-        const members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
+        const members = await databases.listDocuments<Member>(DATABASE_ID, MEMBERS_ID, [
           Query.equal("workspaceId", workspaceId),
           Query.limit(100),
         ]);
