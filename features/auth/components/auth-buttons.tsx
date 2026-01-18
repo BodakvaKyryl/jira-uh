@@ -2,6 +2,8 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 
+import { signUpWithGithub, signUpWithGoogle } from "@/lib/oauth";
+
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
@@ -19,14 +21,12 @@ export const AuthButtons = ({
   showSeparator = true,
   separatorClassName = "px-7",
   disabled = false,
-  onGoogleClick,
-  onGithubClick,
   className,
 }: AuthButtonsProps) => {
   const handleGoogleLogin = () => {
     try {
-      onGoogleClick?.();
-      // Add toast for when social login is implemented
+      signUpWithGoogle();
+      toast.success("Signed in successfully!");
     } catch {
       toast.error("Google login failed. Please try again.");
     }
@@ -34,8 +34,8 @@ export const AuthButtons = ({
 
   const handleGithubLogin = () => {
     try {
-      onGithubClick?.();
-      // Add toast for when social login is implemented
+      signUpWithGithub();
+      toast.success("Signed in successfully!");
     } catch {
       toast.error("GitHub login failed. Please try again.");
     }

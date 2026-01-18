@@ -9,6 +9,7 @@ import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { useGetTasks } from "@/features/tasks/api/use-get-tasks";
 import { DataFilters } from "@/features/tasks/components/data-filters";
 import { UseCreateTaskModal } from "@/features/tasks/hooks/use-create-task-modal";
@@ -31,11 +32,12 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: TaskViewSwitcherProps) =
 
   const [view, setView] = useQueryState("task-view", { defaultValue: "table" });
   const workspaceId = useWorkspaceId();
+  const paramProjectId = useProjectId();
 
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
     workspaceId,
-    projectId,
-    status,
+    projectId: paramProjectId || projectId,
+    status: status ?? undefined,
     assigneeId,
     dueDate,
   });

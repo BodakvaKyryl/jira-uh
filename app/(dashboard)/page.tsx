@@ -4,6 +4,8 @@ import { requireAuth } from "@/lib/auth-utils";
 
 import { getWorkspaces } from "@/features/workspaces/queries";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   await requireAuth();
 

@@ -46,7 +46,7 @@ const app = new Hono<MiddlewareContext>()
               const appwriteUser = await users.get(member.userId);
               return {
                 ...member,
-                name: appwriteUser.name,
+                name: appwriteUser.name || user.email,
                 email: appwriteUser.email,
               };
             } catch (userError) {

@@ -48,14 +48,16 @@ export const CreateTaskForm = ({
   memberOptions,
   isLoading,
 }: CreateTaskFormProps) => {
-  // const router = useRouter();
   type CreateTask = z.infer<typeof createTaskSchema>;
   type FormValues = Omit<CreateTask, "workspaceId">;
   const workspaceId = useWorkspaceId();
   const { mutate, isPending } = useCreateTask();
 
+  const formSchema = createTaskSchema.omit({ workspaceId: true }).extend({
+    dueDate: z.date(),
+  });
   const form = useForm<FormValues>({
-    resolver: zodResolver(createTaskSchema.omit({ workspaceId: true })),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       status: TaskStatus.BACKLOG,
@@ -84,7 +86,6 @@ export const CreateTaskForm = ({
         onSuccess: () => {
           form.reset();
           onCancelForm?.();
-          // TODO: navigate to created task when API returns id
         },
       }
     );

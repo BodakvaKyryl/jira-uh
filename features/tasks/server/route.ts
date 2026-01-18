@@ -122,7 +122,7 @@ const app = new Hono<MiddlewareContext>()
 
     const user = await users.get(member.userId);
 
-    const assignee = { ...member, name: user.name, email: user.email };
+    const assignee = { ...member, name: user.name || user.email, email: user.email };
 
     return c.json({
       data: {
