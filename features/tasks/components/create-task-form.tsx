@@ -86,7 +86,6 @@ export const CreateTaskForm = ({
         onSuccess: () => {
           form.reset();
           onCancelForm?.();
-          // TODO: navigate to created task when API returns id
         },
       }
     );

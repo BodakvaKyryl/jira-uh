@@ -38,7 +38,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
   return (
     <div className="rounded-lg border p-4">
       <div className="flex items-center justify-between">
-        <p className="text-lg font-semibold">Overview</p>
+        <p className="text-lg font-semibold">Description</p>
         <Button variant="outline" size="sm" onClick={() => setIsEditing((prev) => !prev)}>
           {isEditing ? <XIcon className="mr-2 size-4" /> : <PencilIcon className="sze-4 mr-2" />}
           {isEditing ? "Cancel" : "Edit"}
