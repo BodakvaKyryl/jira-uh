@@ -1,10 +1,17 @@
 import { ProjectAnalyticsResponseType } from "@/features/projects/api/use-get-project-analytics";
+import { WorkspcaceAnalyticsResponseType } from "@/features/workspaces/api/use-get-workspace-analytics";
 
 import { AnalyticsCard } from "./analytics-card";
 import { DottedSeparator } from "./dotted-separator";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
-export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
+type AnalyticsData = ProjectAnalyticsResponseType["data"] | WorkspcaceAnalyticsResponseType["data"];
+
+interface AnalyticsProps {
+  data: AnalyticsData;
+}
+
+export const Analytics = ({ data }: AnalyticsProps) => {
   if (!data) return null;
 
   return (

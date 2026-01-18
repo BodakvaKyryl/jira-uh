@@ -81,20 +81,19 @@ const app = new Hono<MiddlewareContext>()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      const projects = await databases.listDocuments(DATABASE_ID, PROJECTS_ID, [
+      const projects = await databases.listDocuments<Project>(DATABASE_ID, PROJECTS_ID, [
         Query.equal("workspaceId", workspaceId),
         Query.orderDesc("$updatedAt"),
         Query.limit(100),
       ]);
 
-      return c.json({ data: projects.documents }, 200);
+      return c.json({ data: projects }, 200);
     }
   )
   .get("/:projectId", sessionMiddleware, async (c) => {
     try {
       const databases = c.get("databases");
       const user = c.get("user");
-
       const { projectId } = c.req.param();
 
       const project = await databases.getDocument<Project>(DATABASE_ID, PROJECTS_ID, projectId);

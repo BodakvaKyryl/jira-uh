@@ -17,7 +17,7 @@ export const CreateTaskFormWrapper = ({ onCancel }: CreateTaskFormWrapperProps) 
   const { data: projects, isLoading: isLoadingProjects } = useGetProjects({ workspaceId });
   const { data: members, isLoading: isLoadingMembers } = useGetMembers({ workspaceId });
 
-  const projectOptions = projects?.map((project) => ({
+  const projectOptions = projects?.documents?.map((project) => ({
     id: project.$id,
     name: project.name,
     imageUrl: project.imageUrl,

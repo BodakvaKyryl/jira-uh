@@ -1,9 +1,11 @@
 import { requireAuth } from "@/lib/auth-utils";
 
+import { WorkspaceIdClient } from "./client";
+
 const WorkspaceIdPage = async () => {
   await requireAuth();
 
-  return <div>WorkspaceIdPage</div>;
+  return <WorkspaceIdClient />;
 };
 
 export default WorkspaceIdPage;

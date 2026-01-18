@@ -28,7 +28,7 @@ export const Projects = () => {
           className="size-5 cursor-pointer text-neutral-500 transition hover:opacity-75"
         />
       </div>
-      {data?.map((project) => {
+      {data?.documents?.map((project) => {
         const href = `/workspaces/${workspaceId}/projects/${project.$id}`;
         const isActive = pathname === href;
 

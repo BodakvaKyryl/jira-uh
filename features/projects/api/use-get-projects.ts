@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
+import { Models } from "node-appwrite";
 
 import { client } from "@/lib/rpc";
+
+import { Project } from "@/features/projects/types";
 
 type AppwriteException = {
   message: string;
@@ -13,7 +16,7 @@ interface useGetProjectsProps {
 }
 
 export const useGetProjects = ({ workspaceId }: useGetProjectsProps) => {
-  const query = useQuery({
+  const query = useQuery<Models.DocumentList<Project>>({
     queryKey: ["projects", workspaceId],
     queryFn: async () => {
       try {
