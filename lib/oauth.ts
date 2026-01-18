@@ -9,8 +9,9 @@ import { createAdminClient } from "@/lib/appwrite";
 export async function signUpWithGithub() {
   const { account } = await createAdminClient();
 
-  const headersList = await headers();
-  const origin = headersList.get("origin");
+  // const headersList = await headers();
+  // const origin = headersList.get("origin");
+  const origin = process.env.NEXT_PUBLIC_APP_URL;
 
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Github,
