@@ -58,7 +58,7 @@ const app = new Hono<MiddlewareContext>()
     } catch (error) {
       console.error("Registration error:", error);
       if (error instanceof z.ZodError) {
-        return c.json({ error: "Validation error", details: error.errors }, 400);
+        return c.json({ error: "Validation error", details: error.issues }, 400);
       }
       return c.json({ error: "Registration failed" }, 500);
     }

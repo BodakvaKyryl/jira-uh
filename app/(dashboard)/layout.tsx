@@ -9,7 +9,7 @@ import { UpdateTaskModal } from "@/features/tasks/components/update-task-modal";
 import { CreateWorkspaceModal } from "@/features/workspaces/components/create-workspace-modal";
 
 interface DashboardLayoutProps {
-  children: React.ReactElement;
+  children: React.ReactNode;
 }
 
 const Dashboard = ({ children }: DashboardLayoutProps) => {
