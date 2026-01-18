@@ -17,7 +17,6 @@ export async function signUpWithGithub() {
     `${origin}/oauth`,
     `${origin}/sign-up`
   );
-
   return redirect(redirectUrl);
 }
 
