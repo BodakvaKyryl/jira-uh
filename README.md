@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Management App
+
+A modern project management application built with Next.js, featuring workspaces, projects, tasks, and team collaboration.
 
 ## Getting Started
-
-First, run the development server:
-
 ```bash
-npm run dev
-# or
+yarn
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Workspace Creation
+![Create Workspace](public/readme-images/create-workspace.png)
 
-## Learn More
+### Workspace Settings
+![Workspace Settings](public/readme-images/workspace-settings.png)
 
-To learn more about Next.js, take a look at the following resources:
+### Homepage Dashboard
+![Homepage](public/readme-images/homepage.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Team Members
+![Members List](public/readme-images/members-list.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Project Management
+![Project Creation](public/readme-images/project-create-form.png)
+![Project Page](public/readme-images/project-page.png)
 
-## Deploy on Vercel
+### Task Management
+![Task Page](public/readme-images/task-page.png)
+![Tasks Page](public/readme-images/tasks-page.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Multiple Views
+![Kanban Board](public/readme-images/tasks-page-kanban.png)
+![Calendar View](public/readme-images/tasks-page-calendar.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Authentication
+![Sign Up](public/readme-images/sign-up-page.png)

@@ -56,12 +56,8 @@ export const UpdateTaskForm = ({
   const workspaceId = useWorkspaceId();
   const { mutate, isPending } = useUpdateTask();
 
-  const formSchema = createTaskSchema.omit({ workspaceId: true }).extend({
-    dueDate: z.date(),
-  });
-
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(createTaskSchema.omit({ workspaceId: true })),
     defaultValues: {
       ...initialValues,
       description: initialValues.description ?? "",
