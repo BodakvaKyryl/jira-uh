@@ -8,6 +8,7 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { DottedSeparator } from "../dotted-separator";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 interface MemberListProps {
   data: Member[];
@@ -33,11 +34,22 @@ export const MemberList = ({ data, total }: MemberListProps) => {
           {data.map((member) => (
             <li key={member.$id}>
               <Card className="hover:bg-muted/20 overflow-hidden rounded-lg shadow-none">
-                <CardContent className="flex flex-col items-center gap-x-2">
+                <CardContent className="flex min-w-0 flex-col items-center gap-y-2">
                   <MemberAvatar name={member.name} className="size-12" />
-                  <div className="flex flex-col items-center overflow-hidden">
-                    <p className="line-clamp-1 truncate text-lg font-medium">{member.name}</p>
-                    <p className="text-muted-foreground truncate text-sm font-medium">
+                  <div className="flex w-full flex-col items-center overflow-hidden">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <p className="w-full truncate text-center text-lg font-medium">
+                            {member.name}
+                          </p>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{member.name}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <p className="text-muted-foreground w-full truncate text-center text-sm font-medium">
                       {member.email}
                     </p>
                   </div>
